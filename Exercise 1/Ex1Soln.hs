@@ -31,9 +31,9 @@ data SF a = FF | SS a
 -- Uncomment the functions you have implemented
 answered = [
     "avgThree",
-    "maxThree"
+    "maxThree",
 --    "invFac",
---   "myGcd",
+    "myGcd"
 --   "binom",
 --    "grow",
 --    "instrictorder",
@@ -45,24 +45,35 @@ answered = [
     ]
 
 -- main :: IO ()
--- main = print (maxThree 9 9 9)
+-- main = print (myGcd (-18) (-18))
 
 -- 1 
 avgThree:: Int -> Int -> Int -> Float
 avgThree x y z = realToFrac(x + y + z) / 3.0
 
 --2
--- List filter [ x | x <- thelist, condition]
+-- List filter [ x | x <- list, condition for x]
 maxThree:: Int -> Int -> Int -> (Int,Int)
 maxThree x y z = (maximum [x, y, z], length [a | a <- [x, y, z], a == maximum [x, y, z]])
 
 -- 3 
 invFac:: Integer -> SF Integer
 invFac _ = FF
+-- invFac x
+--     | x <= 0    = 0
+--     | otherwise = invFac' x 1 1
+invFac':: Integer -> Integer -> Integer -> Integer
+invFac' targetFac nextFacNum currentFac
+    | (currentFac * nextFacNum) < targetFac = invFac' targetFac (nextFacNum + 1) (currentFac * nextFacNum)
+    | (currentFac * nextFacNum) >= targetFac = currentFac
 
 -- 4
 myGcd :: Int -> Int -> Int
-myGcd _ _ = 0
+myGcd x y 
+    | abs x < abs y = myGcd y x
+    | x == y        = abs y
+    | mod x y /= 0  = myGcd y (mod x y)
+    | otherwise     = abs y
 
 -- 5
 binom:: Integer -> Integer -> Integer
