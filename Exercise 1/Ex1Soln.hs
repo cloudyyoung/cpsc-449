@@ -30,7 +30,7 @@ data SF a = FF | SS a
 -- IMPORTANT: List all the functions that you have implemented in the assignment. Your submission will be graded only based on the items in this list.
 -- Uncomment the functions you have implemented
 answered = [
---   "avgThree",  
+  "avgThree"
 --    "maxThree",
 --    "invFac",
 --   "myGcd",
@@ -44,17 +44,17 @@ answered = [
 --   "sublists"
     ]
 
+main :: IO ()
+main = print (maxThree 9 9 7)
 
 -- 1 
 avgThree:: Int -> Int -> Int -> Float
--- Provide your answer below
-avgThree _ _ _ = 0.0
+avgThree x y z = realToFrac(x + y + z) / 3.0
 
 --2
 
 maxThree:: Int -> Int -> Int -> (Int,Int)
--- Provide your answer below
-maxThree _ _ _ = (0,0)
+maxThree x y z = (maximum [x, y, z], 1)
 
 -- 3 
 invFac:: Integer -> SF Integer
