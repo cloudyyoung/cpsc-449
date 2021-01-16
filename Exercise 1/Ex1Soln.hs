@@ -69,8 +69,8 @@ invFac' targetFac nextFacNum currentFac
 
 -- 4
 myGcd :: Int -> Int -> Int
-myGcd x 0 = x
-myGcd 0 y = y
+myGcd x 0 = abs x
+myGcd 0 y = abs y
 myGcd x y 
     | abs x < abs y = myGcd y x
     | x == y        = abs y
