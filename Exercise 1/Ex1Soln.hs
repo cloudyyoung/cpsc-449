@@ -44,8 +44,8 @@ answered = [
 --   "sublists"
     ]
 
--- main :: IO ()
--- main = print (myGcd (-18) (-18))
+main :: IO ()
+main = print (myGcd 2 0)
 
 -- 1 
 avgThree:: Int -> Int -> Int -> Float
@@ -69,6 +69,8 @@ invFac' targetFac nextFacNum currentFac
 
 -- 4
 myGcd :: Int -> Int -> Int
+myGcd x 0 = x
+myGcd 0 y = y
 myGcd x y 
     | abs x < abs y = myGcd y x
     | x == y        = abs y
