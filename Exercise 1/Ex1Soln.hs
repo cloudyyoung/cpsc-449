@@ -30,8 +30,8 @@ data SF a = FF | SS a
 -- IMPORTANT: List all the functions that you have implemented in the assignment. Your submission will be graded only based on the items in this list.
 -- Uncomment the functions you have implemented
 answered = [
-  "avgThree"
---    "maxThree",
+    "avgThree",
+    "maxThree"
 --    "invFac",
 --   "myGcd",
 --   "binom",
@@ -44,17 +44,17 @@ answered = [
 --   "sublists"
     ]
 
-main :: IO ()
-main = print (maxThree 9 9 7)
+-- main :: IO ()
+-- main = print (maxThree 9 9 9)
 
 -- 1 
 avgThree:: Int -> Int -> Int -> Float
 avgThree x y z = realToFrac(x + y + z) / 3.0
 
 --2
-
+-- List filter [ x | x <- thelist, condition]
 maxThree:: Int -> Int -> Int -> (Int,Int)
-maxThree x y z = (maximum [x, y, z], 1)
+maxThree x y z = (maximum [x, y, z], length [a | a <- [x, y, z], a == maximum [x, y, z]])
 
 -- 3 
 invFac:: Integer -> SF Integer
