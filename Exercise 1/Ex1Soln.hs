@@ -36,15 +36,15 @@ answered = [
     "binom",
     "grow",
     "instrictorder",
-    "cheapItems"
+    "cheapItems",
     -- "sortByCost",
-    -- "divisors",
+    "divisors"
     -- "substring",
     -- "sublists"
     ]
 
-main :: IO ()
-main = print (bubbleSort [("a", 20), ("b", 40),("c", 40)] max)
+-- main :: IO ()
+-- main = print (divisors 20)
 
 -- 1 
 avgThree:: Int -> Int -> Int -> Float
@@ -101,7 +101,9 @@ sortByCost _ = []
 
 -- 10
 divisors:: Integer -> [Integer]
-divisors _ = []
+divisors x
+    | x <= 1    = []
+    | otherwise = [y | y <- [1..x], rem x y == 0 && [1,y] == [z | z <- [1..y], rem y z == 0]]
 
 -- 11
 substring :: String -> String -> Bool
