@@ -33,9 +33,9 @@ answered = [
     "maxThree",
     "invFac",
     "myGcd",
-    "binom"
-    -- "grow",
-    -- "instrictorder",
+    "binom",
+    "grow",
+    "instrictorder"
     -- "cheapItems"
     -- "sortByCost",
     -- "divisors",
@@ -44,8 +44,7 @@ answered = [
     ]
 
 -- main :: IO ()
--- main = print (invFac (6))
--- main = print (grow "now!")
+-- main = print (instrictorder [1,2,2,3,3,4,5])
 
 -- 1 
 avgThree:: Int -> Int -> Int -> Float
@@ -77,15 +76,20 @@ myGcd x y
 
 -- 5
 binom:: Integer -> Integer -> Integer
-binom n k = quot (product [(n - 0), (n - 1)..(n - k + 1)]) (product [1..k])
+binom n k
+    | n < 1             = error "n out of defined range"
+    | k < 0 || k > n    = error "k out of defined range"
+    | otherwise         = quot (product [(n - 0), (n - 1)..(n - k + 1)]) (product [1..k])
 
 -- 6
 grow :: String -> String
-grow x = [y | y <- x]
+grow string = [y | (char, times) <- zip string [1..], y <- take times (repeat char)]
 
 -- 7
 instrictorder:: [Int]-> Bool
-instrictorder _ = False
+instrictorder [] = True
+instrictorder [x] = True
+instrictorder (x:(y:ys)) = x < y && instrictorder (y:ys)
 
 -- 8
 cheapItems:: [(String,Int)] -> Int -> [String]
