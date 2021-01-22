@@ -24,28 +24,28 @@ Good luck!
 
 module Ex1Soln where   
 
-data SF a = FF | SS a  
-            deriving Show
+data SF a = FF | SS a deriving Show
 
 -- IMPORTANT: List all the functions that you have implemented in the assignment. Your submission will be graded only based on the items in this list.
 -- Uncomment the functions you have implemented
 answered = [
     "avgThree",
     "maxThree",
---    "invFac",
-    "myGcd"
---   "binom",
---    "grow",
---    "instrictorder",
---  "cheapItems"
---    "sortByCost",
---   "divisors",
---    "substring",
---   "sublists"
+    "invFac",
+    "myGcd",
+    "binom"
+    -- "grow",
+    -- "instrictorder",
+    -- "cheapItems"
+    -- "sortByCost",
+    -- "divisors",
+    -- "substring",
+    -- "sublists"
     ]
 
-main :: IO ()
-main = print (myGcd 2 0)
+-- main :: IO ()
+-- main = print (invFac (6))
+-- main = print (grow "now!")
 
 -- 1 
 avgThree:: Int -> Int -> Int -> Float
@@ -58,14 +58,12 @@ maxThree x y z = (maximum [x, y, z], length [a | a <- [x, y, z], a == maximum [x
 
 -- 3 
 invFac:: Integer -> SF Integer
-invFac _ = FF
--- invFac x
---     | x <= 0    = 0
---     | otherwise = invFac' x 1 1
-invFac':: Integer -> Integer -> Integer -> Integer
-invFac' targetFac nextFacNum currentFac
-    | (currentFac * nextFacNum) < targetFac = invFac' targetFac (nextFacNum + 1) (currentFac * nextFacNum)
-    | (currentFac * nextFacNum) >= targetFac = currentFac
+invFac x
+    | x <= 0    = FF
+    | otherwise = let invFac' targetFac facNum currentFac
+                        | (currentFac * facNum) < targetFac = invFac' targetFac (facNum + 1) (currentFac * facNum)
+                        | (currentFac * facNum) >= targetFac = SS facNum
+        in invFac' x 1 1
 
 -- 4
 myGcd :: Int -> Int -> Int
@@ -79,11 +77,11 @@ myGcd x y
 
 -- 5
 binom:: Integer -> Integer -> Integer
-binom _ _ = 0  
+binom n k = quot (product [(n - 0), (n - 1)..(n - k + 1)]) (product [1..k])
 
 -- 6
 grow :: String -> String
-grow _ = ""
+grow x = [y | y <- x]
 
 -- 7
 instrictorder:: [Int]-> Bool
