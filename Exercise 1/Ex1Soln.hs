@@ -43,8 +43,8 @@ answered = [
     -- "sublists"
     ]
 
--- main :: IO ()
--- main = print (cheapItems [("a", 20), ("b", 40)] 25)
+main :: IO ()
+main = print (bubbleSort [("a", 20), ("b", 40),("c", 40)] max)
 
 -- 1 
 avgThree:: Int -> Int -> Int -> Float
@@ -89,11 +89,11 @@ grow string = [y | (char, times) <- zip string [1..], y <- take times (repeat ch
 instrictorder:: [Int]-> Bool
 instrictorder [] = True
 instrictorder [x] = True
-instrictorder (x:(y:ys)) = x < y && instrictorder (y:ys)
+instrictorder (x:y:ys) = x < y && instrictorder (y:ys)
 
 -- 8
 cheapItems:: [(String,Int)] -> Int -> [String]
-cheapItems items threshold = [item | (item, price) <- items, price < threshold]
+cheapItems items threshold = [name | (name, price) <- items, price < threshold]
 
 -- 9
 sortByCost :: [(String,Int)] -> [(String,Int)]
