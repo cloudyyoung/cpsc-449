@@ -35,8 +35,8 @@ answered = [
     "myGcd",
     "binom",
     "grow",
-    "instrictorder"
-    -- "cheapItems"
+    "instrictorder",
+    "cheapItems"
     -- "sortByCost",
     -- "divisors",
     -- "substring",
@@ -44,7 +44,7 @@ answered = [
     ]
 
 -- main :: IO ()
--- main = print (instrictorder [1,2,2,3,3,4,5])
+-- main = print (cheapItems [("a", 20), ("b", 40)] 25)
 
 -- 1 
 avgThree:: Int -> Int -> Int -> Float
@@ -93,7 +93,7 @@ instrictorder (x:(y:ys)) = x < y && instrictorder (y:ys)
 
 -- 8
 cheapItems:: [(String,Int)] -> Int -> [String]
-cheapItems _ _ = []
+cheapItems items threshold = [item | (item, price) <- items, price < threshold]
 
 -- 9
 sortByCost :: [(String,Int)] -> [(String,Int)]
