@@ -37,14 +37,14 @@ answered = [
     "grow",
     "instrictorder",
     "cheapItems",
-    -- "sortByCost",
+    "sortByCost",
     "divisors"
     -- "substring",
     -- "sublists"
     ]
 
 -- main :: IO ()
--- main = print (divisors 20)
+-- main = print (sortByCost [("a",200), ("b", 40), ("e", 20)])
 
 -- 1 
 -- Convert the sum of the three and divide by 3.0
@@ -120,8 +120,16 @@ cheapItems:: [(String,Int)] -> Int -> [String]
 cheapItems items threshold = [name | (name, price) <- items, price < threshold]
 
 -- 9
+-- Using bubble sort, reference from: https://codereview.stackexchange.com/questions/197868/bubble-sort-in-haskell
+-- Using `foldl` to achieve recursion for bubble sort
+-- When the value on the left is greater on the right then swap them, repeat until the list is sorted
 sortByCost :: [(String,Int)] -> [(String,Int)]
-sortByCost _ = []
+sortByCost list = let 
+                    swap [x] = [x]
+                    swap (x:xs)
+                        | snd x > snd (head xs) = (head xs):(swap (x:tail xs))
+                        | otherwise = x:(swap xs)
+                    in foldl (\acc e -> swap acc) list list
 
 -- 10
 -- From a list contains 1 to the given number, take each number from the list,
