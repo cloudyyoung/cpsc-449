@@ -77,7 +77,7 @@ myGcd :: Int -> Int -> Int
 myGcd x 0 = abs x
 myGcd 0 y = abs y
 myGcd x y 
-    | abs x < abs y = myGcd y x         -- dividend has to always be the greater one (greater for positive and smaller for negative)
+    | abs x < abs y = myGcd y x         -- dividend has to always be the greater one (greater for positive and less for negative)
     | x == y        = abs y             -- if dividend and divisor are the same, then GCD is itself
     | mod x y /= 0  = myGcd y (mod x y) -- if remainder is not 0, then keep dividing
     | otherwise     = abs y             -- if remainder is 0, then return the remainder as GCD
