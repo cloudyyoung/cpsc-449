@@ -46,6 +46,9 @@ reverse xs = last xs : reverse(init xs)
 (//) :: (Integral a) => a -> a -> a
 (//) a b = quot a b
 
+-- (%)
+(%) :: (Integral a) => a -> a -> a
+(%) a b = rem a b
 
 -- map
 map :: (a -> b) -> [a] -> [b]
@@ -101,8 +104,8 @@ collatzIndex ::  Int -> SF [Int]
 -- Provide your answer below
 collatzIndex n = let
                     collatz x
-                        | rem x 2 == 0  = x // 2
-                        | otherwise     = 3 * x + 1
+                        | x % 2 == 0        = x // 2
+                        | otherwise         = 3 * x + 1
                     collatzIndex' x list
                         | x < 1             = FF
                         | x == 1            = SS [1]
