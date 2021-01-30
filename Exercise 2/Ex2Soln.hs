@@ -24,7 +24,11 @@ import Prelude hiding (maybe, flip, curry, zipWith, foldr, filter, splitAt, leng
 
 
 -- main :: IO ()
--- main = print (twoTautology (True, True) -> True)
+-- main = print (twoTautology fun)
+
+fun :: (Bool, Bool) -> Bool
+fun (False, True) = False
+fun (x,y)         = True
 
 
 data SF a = FF | SS a  
@@ -32,7 +36,12 @@ data SF a = FF | SS a
 -- 1 
 twoTautology :: ((Bool,Bool) -> Bool) -> Bool
 -- Provide your answer below
-twoTautology _ = True
+twoTautology f
+    | f(True,True)   /= True    = False
+    | f(True,False)  /= True    = False
+    | f(False,True)  /= True    = False
+    | f(False,False) /= True    = False
+    | otherwise                 = True
 
 
 twoEquiv :: ((Bool,Bool)->Bool)->((Bool,Bool)->Bool)->Bool
