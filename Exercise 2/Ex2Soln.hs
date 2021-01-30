@@ -23,8 +23,8 @@ import Prelude hiding (maybe, flip, curry, zipWith, foldr, filter, splitAt, leng
 
 
 
--- main :: IO ()
--- main = print (twoTautology fun)
+main :: IO ()
+main = print (badFermat)
 
 fun :: (Bool, Bool) -> Bool
 fun (False, True) = False
@@ -55,7 +55,11 @@ twoEquiv f1 f2
 
 --2
 badFermat :: Integer
-badFermat = 0
+badFermat = let 
+                isPrime n    = [x | x <- [2..n-1], mod n x == 0] == []
+                fermat  n    = 2 ^ (2 ^ n) + 1
+                badFermat' n = if isPrime (fermat n) then badFermat' (n + 1) else n
+            in badFermat' 1
 
 
 -- 3 
