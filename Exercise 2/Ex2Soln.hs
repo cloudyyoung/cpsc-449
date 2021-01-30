@@ -24,8 +24,8 @@ import Prelude hiding (maybe, flip, curry, zipWith, foldr, filter, splitAt, leng
 
 
 main :: IO ()
--- main = print (bsort (<) [-7,-3,5,8,7])
-main = print (length [1,2,3])
+main = print (bsort (<) [-7,-3,5,8,7])
+-- main = print (collatzIndex 7)
 
 
 -- reverse
@@ -41,6 +41,11 @@ reverse xs = last xs : reverse(init xs)
 -- (!=)
 (!=) :: (Eq a) => a -> a -> Bool
 (!=) a b = a /= b
+
+-- (//)
+(//) :: (Integral a) => a -> a -> a
+(//) a b = quot a b
+
 
 -- map
 map :: (a -> b) -> [a] -> [b]
@@ -96,7 +101,7 @@ collatzIndex ::  Int -> SF [Int]
 -- Provide your answer below
 collatzIndex n = let
                     collatz x
-                        | rem x 2 == 0  = quot x 2
+                        | rem x 2 == 0  = x // 2
                         | otherwise     = 3 * x + 1
                     collatzIndex' x list
                         | x < 1             = FF
@@ -115,6 +120,7 @@ bisection _ _ =  Just 0.0
 
 -- 5
 bsort:: Integral a => (a -> a -> Bool) -> [a] -> [a]
+bsort f [] = []
 bsort f [x] = [x]
 bsort f (x:y:xs)
     | f x y     = x:(bsort f (y:xs))
