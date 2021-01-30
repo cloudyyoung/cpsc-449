@@ -46,7 +46,12 @@ twoTautology f
 
 twoEquiv :: ((Bool,Bool)->Bool)->((Bool,Bool)->Bool)->Bool
 -- Provide your answer below
-twoEquiv _ _ = True
+twoEquiv f1 f2
+    | f1(True,True)   /= f2(True,True)      = False
+    | f1(True,False)  /= f2(True,False)     = False
+    | f1(False,True)  /= f2(False,True)     = False
+    | f1(False,False) /= f2(False,False)    = False
+    | otherwise                             = True
 
 --2
 badFermat :: Integer
