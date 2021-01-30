@@ -26,17 +26,13 @@ import Prelude hiding (maybe, flip, curry, zipWith, foldr, filter, splitAt, leng
 main :: IO ()
 main = print (collatzIndex 1)
 
-fun :: (Bool, Bool) -> Bool
-fun (False, True) = False
-fun (x,y)         = True
 
+-- reverse
 reverse :: [a] -> [a]
 reverse [] = []
 reverse xs = last xs : reverse(init xs)
 
 
-data SF a = FF | SS a  
-            deriving (Eq, Show)
 -- 1 
 twoTautology :: ((Bool,Bool) -> Bool) -> Bool
 -- Provide your answer below
@@ -67,6 +63,9 @@ badFermat = let
 
 
 -- 3 
+data SF a = FF | SS a  
+            deriving (Eq, Show)
+
 collatzIndex ::  Int -> SF [Int]
 -- Provide your answer below
 collatzIndex n = let
