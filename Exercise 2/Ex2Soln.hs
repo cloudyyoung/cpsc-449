@@ -24,7 +24,7 @@ import Prelude hiding (maybe, flip, curry, zipWith, foldr, filter, splitAt, leng
 
 
 main :: IO ()
-main = print (collatzIndex 1)
+main = print ([1,2,3] != [4,5,6])
 
 
 -- reverse
@@ -32,25 +32,33 @@ reverse :: [a] -> [a]
 reverse [] = []
 reverse xs = last xs : reverse(init xs)
 
+-- (++)
+(++) :: [a] -> [a] -> [a]
+(++) [] ys = ys
+(++) (x:xs) ys = x : xs ++ ys
+
+-- (!=)
+(!=) :: (Eq a) => a -> a -> Bool
+(!=) a b = a /= b
 
 -- 1 
 twoTautology :: ((Bool,Bool) -> Bool) -> Bool
 -- Provide your answer below
 twoTautology f
-    | f(True,True)   /= True    = False
-    | f(True,False)  /= True    = False
-    | f(False,True)  /= True    = False
-    | f(False,False) /= True    = False
+    | f(True,True)   != True    = False
+    | f(True,False)  != True    = False
+    | f(False,True)  != True    = False
+    | f(False,False) != True    = False
     | otherwise                 = True
 
 
 twoEquiv :: ((Bool,Bool)->Bool)->((Bool,Bool)->Bool)->Bool
 -- Provide your answer below
 twoEquiv f1 f2
-    | f1(True,True)   /= f2(True,True)      = False
-    | f1(True,False)  /= f2(True,False)     = False
-    | f1(False,True)  /= f2(False,True)     = False
-    | f1(False,False) /= f2(False,False)    = False
+    | f1(True,True)   != f2(True,True)      = False
+    | f1(True,False)  != f2(True,False)     = False
+    | f1(False,True)  != f2(False,True)     = False
+    | f1(False,False) != f2(False,False)    = False
     | otherwise                             = True
 
 --2
@@ -103,7 +111,8 @@ type Matrix a = [[a]]
 type DoubleMatrix = Matrix Double
 
 transpose:: Matrix a -> (Maybe (Matrix a))
-transpose _ = Nothing
+transpose matrix = Nothing
+
 
 addMat :: DoubleMatrix -> DoubleMatrix -> (Maybe DoubleMatrix)
 addMat _ _  = Nothing
