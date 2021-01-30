@@ -24,10 +24,10 @@ import Prelude hiding (maybe, flip, curry, zipWith, foldr, filter, splitAt, leng
 
 
 main :: IO ()
-main = print (bsort f [2,7,7,-6,7])
--- main = print (collatzIndex 7)
+main = print (qsort (<) [-2,6,-4,8,0,3])
+-- main = print (not True)
 
-f a b = a > 0
+f a b = a // 2 > b
 
 -- reverse
 reverse :: [a] -> [a]
@@ -40,16 +40,13 @@ reverse xs = last xs : reverse(init xs)
 (++) (x:xs) ys = x : xs ++ ys
 
 -- (!=)
-(!=) :: (Eq a) => a -> a -> Bool
-(!=) a b = a /= b
+(!=) = (/=)
 
 -- (//)
-(//) :: (Integral a) => a -> a -> a
-(//) a b = quot a b
+(//) = quot
 
 -- (%)
-(%) :: (Integral a) => a -> a -> a
-(%) a b = rem a b
+(%) = rem
 
 -- map
 map :: (a -> b) -> [a] -> [b]
@@ -124,7 +121,7 @@ bisection _ _ =  Just 0.0
 
 -- 5
 bsort:: Integral a => (a -> a -> Bool) -> [a] -> [a]
-bsort f [] = []
+bsort _ [] = []
 bsort f list = let
                     swap [x] = [x]
                     swap (x:y:xs) 
@@ -135,7 +132,11 @@ bsort f list = let
                 in bsort' list list
 
 qsort:: Integral a => (a -> a -> Bool) -> [a] -> [a]
-qsort _ _  = []
+qsort _ []  = []
+qsort f (x:xs) = let
+                    left = qsort f [y | y <- xs, not(f x y)]
+                    right = qsort f [z | z <- xs, f x z]
+                in left ++ [x] ++ right
 
 msort:: Integral a =>  (a -> a -> Bool) -> [a] -> [a]
 msort _ _  = []
