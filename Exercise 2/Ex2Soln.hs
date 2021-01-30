@@ -19,12 +19,13 @@ Good luck!
 
 module Submission where
 
-import Prelude hiding (maybe, flip, curry, zipWith, foldr, filter, splitAt, length, (++), foldl, take, const, reverse)
+import Prelude hiding (maybe, flip, curry, zipWith, foldr, filter, splitAt, length, (++), foldl, take, const, reverse, map)
 
 
 
 main :: IO ()
-main = print ([1,2,3] != [4,5,6])
+-- main = print (bsort (<) [-7,-3,5,8,7])
+main = print (length [1,2,3])
 
 
 -- reverse
@@ -40,6 +41,23 @@ reverse xs = last xs : reverse(init xs)
 -- (!=)
 (!=) :: (Eq a) => a -> a -> Bool
 (!=) a b = a /= b
+
+-- map
+map :: (a -> b) -> [a] -> [b]
+map _ [] = []
+map f (x:xs) = (f x):(map f xs)
+
+--filter
+filter :: (a -> Bool) -> [a] -> [a]
+filter _ [] = []
+filter f (x:xs)
+    | f x       = x:(filter f xs)
+    | otherwise = filter f xs
+
+-- length
+length :: [a] -> Int
+length [] = 0
+length (x:xs) = 1 + length(xs)
 
 -- 1 
 twoTautology :: ((Bool,Bool) -> Bool) -> Bool
@@ -97,8 +115,10 @@ bisection _ _ =  Just 0.0
 
 -- 5
 bsort:: Integral a => (a -> a -> Bool) -> [a] -> [a]
-bsort _ _ = []        
-
+bsort f [x] = [x]
+bsort f (x:y:xs)
+    | f x y     = x:(bsort f (y:xs))
+    | otherwise = y:(bsort f (x:xs))
 
 qsort:: Integral a => (a -> a -> Bool) -> [a] -> [a]
 qsort _ _  = []
@@ -111,7 +131,7 @@ type Matrix a = [[a]]
 type DoubleMatrix = Matrix Double
 
 transpose:: Matrix a -> (Maybe (Matrix a))
-transpose matrix = Nothing
+transpose _ = Nothing
 
 
 addMat :: DoubleMatrix -> DoubleMatrix -> (Maybe DoubleMatrix)
