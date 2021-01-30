@@ -19,16 +19,20 @@ Good luck!
 
 module Submission where
 
-import Prelude hiding (maybe, flip, curry, zipWith, foldr, filter, splitAt, length, (++), foldl, take, const)
+import Prelude hiding (maybe, flip, curry, zipWith, foldr, filter, splitAt, length, (++), foldl, take, const, reverse)
 
 
 
 main :: IO ()
-main = print (badFermat)
+main = print (collatzIndex 1)
 
 fun :: (Bool, Bool) -> Bool
 fun (False, True) = False
 fun (x,y)         = True
+
+reverse :: [a] -> [a]
+reverse [] = []
+reverse xs = last xs : reverse(init xs)
 
 
 data SF a = FF | SS a  
@@ -65,8 +69,16 @@ badFermat = let
 -- 3 
 collatzIndex ::  Int -> SF [Int]
 -- Provide your answer below
-collatzIndex _ = FF
-
+collatzIndex n = let
+                    collatz x
+                        | rem x 2 == 0  = quot x 2
+                        | otherwise     = 3 * x + 1
+                    collatzIndex' x list
+                        | x < 1             = FF
+                        | x == 1            = SS [1]
+                        | collatz x == 1    = SS (reverse (1:list))
+                        | otherwise         = collatzIndex' (collatz x) ((collatz x):list)
+                in collatzIndex' n [n]
 
 -- 4
 e :: Double
