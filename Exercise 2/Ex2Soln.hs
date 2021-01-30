@@ -24,9 +24,10 @@ import Prelude hiding (maybe, flip, curry, zipWith, foldr, filter, splitAt, leng
 
 
 main :: IO ()
-main = print (bsort (<) [-7,-3,5,8,7])
+main = print (bsort f [2,7,7,-6,7])
 -- main = print (collatzIndex 7)
 
+f a b = a > 0
 
 -- reverse
 reverse :: [a] -> [a]
@@ -124,10 +125,14 @@ bisection _ _ =  Just 0.0
 -- 5
 bsort:: Integral a => (a -> a -> Bool) -> [a] -> [a]
 bsort f [] = []
-bsort f [x] = [x]
-bsort f (x:y:xs)
-    | f x y     = x:(bsort f (y:xs))
-    | otherwise = y:(bsort f (x:xs))
+bsort f list = let
+                    swap [x] = [x]
+                    swap (x:y:xs) 
+                        | f x y     = x:(swap (y:xs))
+                        | otherwise = y:(swap (x:xs))
+                    bsort' [x] list = swap list
+                    bsort' (x:xs) list = bsort' xs (swap list)
+                in bsort' list list
 
 qsort:: Integral a => (a -> a -> Bool) -> [a] -> [a]
 qsort _ _  = []
