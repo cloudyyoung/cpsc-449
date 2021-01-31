@@ -173,19 +173,21 @@ msort f list = let
 type Matrix a = [[a]] 
 type DoubleMatrix = Matrix Double
 
+validate :: Matrix a -> Bool
+validate x =    let
+                    validate' size [x] = size == length x
+                    validate' size (x:xs) = (size == length x) && validate' (length x) xs
+                in validate' (length (head x)) x
+
 transpose:: Matrix a -> (Maybe (Matrix a))
 transpose [] = Just []
 transpose x =   let
-                    transpose' ([]:_)   = []
-                    transpose' matrix   = (map head matrix):(transpose' (map tail matrix))
-                    check size [x]      = size == length x
-                    check size (x:xs)   = (size == length x) && check (length x) xs
+                    transpose' ([]:_) = []
+                    transpose' matrix = (map head matrix):(transpose' (map tail matrix))
                     transpose'' matrix
-                        | check (length (head matrix)) matrix   = Just(transpose' matrix)
-                        | otherwise                             = Nothing
+                        | validate matrix = Just(transpose' matrix)
+                        | otherwise       = Nothing
                 in transpose'' x
-
-
 
 addMat :: DoubleMatrix -> DoubleMatrix -> (Maybe DoubleMatrix)
 addMat _ _  = Nothing
