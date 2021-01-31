@@ -174,7 +174,7 @@ type Matrix a = [[a]]
 type DoubleMatrix = Matrix Double
 
 transpose:: Matrix a -> (Maybe (Matrix a))
-transpose [] = Nothing
+transpose [] = Just []
 transpose x =   let
                     transpose' ([]:_)   = []
                     transpose' matrix   = (map head matrix):(transpose' (map tail matrix))
