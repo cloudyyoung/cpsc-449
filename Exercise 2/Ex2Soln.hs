@@ -19,13 +19,13 @@ Good luck!
 
 module Submission where
 
-import Prelude hiding (maybe, flip, curry, zipWith, foldr, filter, splitAt, length, (++), foldl, take, const, reverse, map)
+import Prelude hiding (maybe, flip, curry, zipWith, foldr, filter, splitAt, length, (++), foldl, take, drop, const, reverse, map)
 
 
 
 main :: IO ()
-main = print (qsort (<) [-2,6,-4,8,0,3])
--- main = print (not True)
+main = print (msort (<) [-2,6,-4,8,0,3])
+-- main = print (drop 3 [-2,6,-4,8,0,3])
 
 f a b = a // 2 > b
 
@@ -34,10 +34,22 @@ reverse :: [a] -> [a]
 reverse [] = []
 reverse xs = last xs : reverse(init xs)
 
+-- take
+take :: Int -> [a] -> [a]
+take _ [] = []
+take 0 _ = []
+take size (x:xs) = x:(take (size - 1) xs)
+
+-- drop
+drop :: Int -> [a] -> [a]
+drop _ [] = []
+drop 0 list = list
+drop size (x:xs) = drop (size - 1) xs
+
 -- (++)
 (++) :: [a] -> [a] -> [a]
 (++) [] ys = ys
-(++) (x:xs) ys = x : xs ++ ys
+(++) (x:xs) ys = x:(xs ++ ys)
 
 -- (!=)
 (!=) = (/=)
@@ -139,7 +151,18 @@ qsort f (x:xs) = let
                 in left ++ [x] ++ right
 
 msort:: Integral a =>  (a -> a -> Bool) -> [a] -> [a]
-msort _ _  = []
+msort _ []  = []
+msort _ [x] = [x]
+msort f list = let
+                    half = length list // 2
+                    left = msort f (take half list)
+                    right = msort f (drop half list)
+                    merge [] y = y
+                    merge x [] = x
+                    merge (x:xs) (y:ys)
+                        | f x y     = x:(merge xs (y:ys))
+                        | otherwise = y:(merge (x:xs) ys)
+                in merge left right
 
 -- 6
 type Matrix a = [[a]] 
