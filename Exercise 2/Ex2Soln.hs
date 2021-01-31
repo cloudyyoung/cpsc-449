@@ -24,8 +24,8 @@ import Prelude hiding (maybe, flip, curry, zipWith, foldr, filter, splitAt, leng
 
 
 main :: IO ()
-main = print (bsort (<) [-2,6,-4,8,0,3])
--- main = print (drop 3 [-2,6,-4,8,0,3])
+-- main = print (bsort (<) [-2,6,-4,8,0,3])
+main = print (transpose [[1,2,3], [4,5,6], [7,8,9]])
 
 f a b = a // 2 > b
 
@@ -174,7 +174,17 @@ type Matrix a = [[a]]
 type DoubleMatrix = Matrix Double
 
 transpose:: Matrix a -> (Maybe (Matrix a))
-transpose _ = Nothing
+transpose [] = Nothing
+transpose x =   let
+                    transpose' ([]:_)   = []
+                    transpose' matrix   = (map head matrix):(transpose' (map tail matrix))
+                    check size [x]      = size == length x
+                    check size (x:xs)   = (size == length x) && check (length x) xs
+                    transpose'' matrix
+                        | check (length (head matrix)) matrix   = Just(transpose' matrix)
+                        | otherwise                             = Nothing
+                in transpose'' x
+
 
 
 addMat :: DoubleMatrix -> DoubleMatrix -> (Maybe DoubleMatrix)
