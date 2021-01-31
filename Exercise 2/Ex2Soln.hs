@@ -140,7 +140,6 @@ bsort f list = let
                     swap (x:y:xs) 
                         | f x y     = x:(swap (y:xs))
                         | otherwise = y:(swap (x:xs))
-                    sorted [x] = True
                     sorted [x,y] = (f x y)
                     sorted (x:y:xs) = (f x y) && (sorted (y:xs))
                     bsort' list
