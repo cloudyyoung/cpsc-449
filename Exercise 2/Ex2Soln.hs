@@ -24,7 +24,7 @@ import Prelude hiding (maybe, flip, curry, zipWith, foldr, filter, splitAt, leng
 
 
 main :: IO ()
-main = print (msort (<) [-2,6,-4,8,0,3])
+main = print (bsort (<) [-2,6,-4,8,0,3])
 -- main = print (drop 3 [-2,6,-4,8,0,3])
 
 f a b = a // 2 > b
@@ -133,20 +133,26 @@ bisection _ _ =  Just 0.0
 
 -- 5
 bsort:: Integral a => (a -> a -> Bool) -> [a] -> [a]
-bsort _ [] = []
+bsort _ []  = []
+bsort _ [x] = [x]
 bsort f list = let
                     swap [x] = [x]
                     swap (x:y:xs) 
                         | f x y     = x:(swap (y:xs))
                         | otherwise = y:(swap (x:xs))
-                    bsort' [x] list = swap list
-                    bsort' (x:xs) list = bsort' xs (swap list)
-                in bsort' list list
+                    sorted [x] = True
+                    sorted [x,y] = (f x y)
+                    sorted (x:y:xs) = (f x y) && (sorted (y:xs))
+                    bsort' list
+                        | sorted list = list
+                        | otherwise   = bsort' (swap list)
+                in bsort' list
 
 qsort:: Integral a => (a -> a -> Bool) -> [a] -> [a]
 qsort _ []  = []
+qsort _ [x] = [x]
 qsort f (x:xs) = let
-                    left = qsort f [y | y <- xs, not(f x y)]
+                    left  = qsort f [y | y <- xs, not(f x y)]
                     right = qsort f [z | z <- xs, f x z]
                 in left ++ [x] ++ right
 
@@ -154,8 +160,8 @@ msort:: Integral a =>  (a -> a -> Bool) -> [a] -> [a]
 msort _ []  = []
 msort _ [x] = [x]
 msort f list = let
-                    half = length list // 2
-                    left = msort f (take half list)
+                    half  = length list // 2
+                    left  = msort f (take half list)
                     right = msort f (drop half list)
                     merge [] y = y
                     merge x [] = x
