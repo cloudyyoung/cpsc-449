@@ -210,10 +210,6 @@ addMat x y =    let
                     addRow (x:xs) (y:ys) res = (x + y):(addRow xs ys res)
                 in addMat' x y
 
-addRow :: (Num a) => [a] -> [a] -> [a] -> [a]
-addRow [] [] res = res
-addRow (x:xs) (y:ys) res = addRow xs ys ((x + y):res)
-
 multMat :: DoubleMatrix -> DoubleMatrix -> (Maybe DoubleMatrix)
 multMat _ _ = Nothing
 
