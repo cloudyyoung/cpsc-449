@@ -25,7 +25,8 @@ import Prelude hiding (maybe, flip, curry, zipWith, foldr, filter, splitAt, leng
 
 main :: IO ()
 -- main = print (bsort (<) [-2,6,-4,8,0,3])
-main = print (transpose [[1,2,3], [4,5,6], [7,8,9]])
+main = print (addMat [[1.0,2.0,3.0], [4.0,5.0,6.0]] [[0,0,0], [0,0,0]])
+-- main = print (addRow [1.0,2.0] [4.0,5.0] [])
 
 f a b = a // 2 > b
 
@@ -52,6 +53,7 @@ drop size (x:xs) = drop (size - 1) xs
 (++) (x:xs) ys = x:(xs ++ ys)
 
 -- (!=)
+(!=) :: (Eq a) => a -> a -> Bool
 (!=) = (/=)
 
 -- (//)
@@ -179,6 +181,9 @@ validate x =    let
                     validate' size (x:xs) = (size == length x) && validate' (length x) xs
                 in validate' (length (head x)) x
 
+size :: Matrix a -> (Int,Int)
+size (x:xs) = (length (x:xs), length x)
+
 transpose:: Matrix a -> (Maybe (Matrix a))
 transpose [] = Just []
 transpose x =   let
@@ -190,7 +195,24 @@ transpose x =   let
                 in transpose'' x
 
 addMat :: DoubleMatrix -> DoubleMatrix -> (Maybe DoubleMatrix)
-addMat _ _  = Nothing
+addMat [] [] = Just []
+addMat x [] = Nothing
+addMat [] y = Nothing
+addMat x y =    let
+                    addMat' x y
+                        | validate x != True    = Nothing
+                        | validate y != True    = Nothing
+                        | (size x) != (size y)  = Nothing
+                        | otherwise             = Just(addColumn x y [])
+                    addColumn [] [] res = res
+                    addColumn (x:xs) (y:ys) res = (addRow x y []):(addColumn xs ys res)
+                    addRow [] [] res = res
+                    addRow (x:xs) (y:ys) res = (x + y):(addRow xs ys res)
+                in addMat' x y
+
+addRow :: (Num a) => [a] -> [a] -> [a] -> [a]
+addRow [] [] res = res
+addRow (x:xs) (y:ys) res = addRow xs ys ((x + y):res)
 
 multMat :: DoubleMatrix -> DoubleMatrix -> (Maybe DoubleMatrix)
 multMat _ _ = Nothing
