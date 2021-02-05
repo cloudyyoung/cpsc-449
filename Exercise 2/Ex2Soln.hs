@@ -25,8 +25,7 @@ import Prelude hiding (maybe, flip, curry, zipWith, foldr, filter, splitAt, leng
 
 main :: IO ()
 -- main = print (bsort (<) [-2,6,-4,8,0,3])
-main = print (addMat [[1.0,2.0,3.0], [4.0,5.0,6.0]] [[0,0,0], [0,0,0]])
--- main = print (addRow [1.0,2.0] [4.0,5.0] [])
+main = print (multMat [[1.0,2.0,3.0], [4.0,5.0,6.0]] [[7,8], [9,10], [1,12]])
 
 f a b = a // 2 > b
 
@@ -138,6 +137,7 @@ bsort:: Integral a => (a -> a -> Bool) -> [a] -> [a]
 bsort _ []  = []
 bsort _ [x] = [x]
 bsort f list = let
+                    swap [] = []
                     swap [x] = [x]
                     swap (x:y:xs) 
                         | f x y     = x:(swap (y:xs))
@@ -211,7 +211,20 @@ addMat x y =    let
                 in addMat' x y
 
 multMat :: DoubleMatrix -> DoubleMatrix -> (Maybe DoubleMatrix)
-multMat _ _ = Nothing
+multMat [] [] = Just []
+multMat x y =   let
+                    multMat' x y
+                        | validate x != True         = Nothing
+                        | validate y != True         = Nothing
+                        | snd(size x) != fst(size y) = Nothing
+                        | otherwise                  = Just(multRow x y)
+                    multRow [] _ = []
+                    multRow (x:xs) y = (multColumn x y):(multRow xs y)
+                    multColumn _ [] = []
+                    multColumn x y = (multList x (map head y)):(multColumn x (map tail y))
+                    multList [] [] = 0
+                    multList (x:xs) (y:ys) = (x * y) + (multList xs ys)
+                in multMat' x y
 
 -- 7
 nreverse :: (Ord a, Integral a) => [a] -> [a]
