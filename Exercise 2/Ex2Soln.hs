@@ -25,11 +25,11 @@ import Prelude hiding (maybe, flip, curry, zipWith, foldr, filter, splitAt, leng
 
 main :: IO ()
 -- main = print (bsort (<) [-2,6,-4,8,0,3])
--- main = print (multMat [[1.0,2.0,3.0], [4.0,5.0,6.0]] [[7,8], [9,10], [1,12]])
+main = print (multMat [[1.0,2.0,3.0], [4.0,5.0,6.0]] [[7,8], [9,10], [1,12]])
 -- main = print(bisection f1 (2.215, 2.217))
 -- main = print(bisection f2 (-2, 2))
 -- main = print(bisection cos (3*pi/2,pi/2))
-main = print(bisection cos (0,pi))
+-- main = print(bisection cos (0,pi))
 -- main = print(bisection cos (pi,pi))
 -- main = print(bisection cos (0,0))
 -- main = print(fact)
@@ -92,8 +92,8 @@ length [] = 0
 length (x:xs) = 1 + length(xs)
 
 -- 1 
+-- Check if for all T/F, the result is T
 twoTautology :: ((Bool,Bool) -> Bool) -> Bool
--- Provide your answer below
 twoTautology f
     | f(True,True)   != True    = False
     | f(True,False)  != True    = False
@@ -101,9 +101,8 @@ twoTautology f
     | f(False,False) != True    = False
     | otherwise                 = True
 
-
+-- Check if the T/F values for f1 and f2 are the same
 twoEquiv :: ((Bool,Bool)->Bool)->((Bool,Bool)->Bool)->Bool
--- Provide your answer below
 twoEquiv f1 f2
     | f1(True,True)   != f2(True,True)      = False
     | f1(True,False)  != f2(True,False)     = False
@@ -111,7 +110,15 @@ twoEquiv f1 f2
     | f1(False,False) != f2(False,False)    = False
     | otherwise                             = True
 
---2
+-- 2
+-- isPrime:     list all the divisors of a given number, excluding 1 and itself, 
+--              if the list is empty, means it has no divisor other than 1 and itself,
+--
+--              which means it's a prime number
+-- fermat:      apply the given number with the formula
+--
+-- badFermat':  if current fermat number is a prime number, then keep fermat,
+--              otherwise, it's a bad fermat number, return
 badFermat :: Integer
 badFermat = let 
                 isPrime n    = [x | x <- [2..n-1], mod n x == 0] == []
@@ -124,8 +131,13 @@ badFermat = let
 data SF a = FF | SS a  
             deriving (Eq, Show)
 
+-- collatz:         apply perspective formula for even and odd numbers
+--
+-- collatzIndex':   if x is less than 1, then it's invalid input, FF
+--                  if x is equal to 1, then return itself
+--                  if the next collatz number is equal to 1, then append 1 and reverse the result lise
+--                  otherwise, keep getting collatz numbers
 collatzIndex ::  Int -> SF [Int]
--- Provide your answer below
 collatzIndex n = let
                     collatz x
                         | x % 2 == 0        = x // 2
@@ -141,11 +153,15 @@ collatzIndex n = let
 e :: Double
 e = exp (-34)
 
+-- If the signs of fa and fb are not different, then input is invalid, Nothing
+-- If the absolute value of fm is within the error range, return m
+-- Or if the difference of a and b are within the error range, return  
+-- If fa and fm have different sign, narrow the range down to a and m
+-- If fm and fb have different sign, narrow the range down to m and b
+-- Otherwise, fails and return Nothing
 bisection::(Double->Double)->(Double,Double)->Maybe Double
 bisection f (a, b)
     | not (diffSign fa fb)          = Nothing
-    | (abs fm) < e                  = Just m
-    | (abs fm) < e                  = Just m
     | (abs fm) < e                  = Just m
     | d < e                         = Just m
     | diffSign fa fm                = bisection f (a, m)
@@ -163,6 +179,10 @@ bisection f (a, b)
             | otherwise      = False
 
 -- 5
+-- bsort Bubble Sort
+-- swap: for a list, if the first element is greater than the second, then swap their positions
+-- sorted: for a list, return true if it's sorted, otherwise return false
+-- bsort': if the list is sorted, then return list, otherwise keep sorting
 bsort:: Integral a => (a -> a -> Bool) -> [a] -> [a]
 bsort _ []  = []
 bsort _ [x] = [x]
@@ -179,6 +199,13 @@ bsort f list = let
                         | otherwise   = bsort' (swap list)
                 in bsort' list
 
+-- qsort Quick Sort
+-- Let the first element of the list be the pivot
+-- left: the left side of list, filter all the element less than the pivot
+--       use qsort recursively until the sublist only contains a pivot
+--       then the list is sorted
+-- Similar with right side
+-- Concatenate the left, pivot itself and the right side of list
 qsort:: Integral a => (a -> a -> Bool) -> [a] -> [a]
 qsort _ []  = []
 qsort _ [x] = [x]
@@ -187,6 +214,12 @@ qsort f (x:xs) = let
                     right = qsort f [z | z <- xs, f x z]
                 in left ++ [x] ++ right
 
+-- msort Merge Sort
+-- half: the length of half of a given list
+-- left: split the given list by half, recursively msort left half
+--       until the sublist only contains a single element
+-- Similar with right
+-- merge: merge two lists together, smaller one on the left
 msort:: Integral a =>  (a -> a -> Bool) -> [a] -> [a]
 msort _ []  = []
 msort _ [x] = [x]
@@ -205,15 +238,22 @@ msort f list = let
 type Matrix a = [[a]] 
 type DoubleMatrix = Matrix Double
 
+-- Validity of a matrix
+-- If the length of one line is different from previous line, this matrix is invalid
 validate :: Matrix a -> Bool
 validate x =    let
                     validate' size [x] = size == length x
                     validate' size (x:xs) = (size == length x) && validate' (length x) xs
                 in validate' (length (head x)) x
 
+-- Size of a matrix
+-- Returns (row, column)
 size :: Matrix a -> (Int,Int)
 size (x:xs) = (length (x:xs), length x)
 
+-- Transpose of Matrix
+-- transpose': get head of each column and put them into a list as row, or vice versa
+-- transpose'': check if the matrix is valid, then transpose'
 transpose:: Matrix a -> (Maybe (Matrix a))
 transpose [] = Just []
 transpose x =   let
@@ -224,6 +264,11 @@ transpose x =   let
                         | otherwise       = Nothing
                 in transpose'' x
 
+-- Addition of Matrix
+-- addMat': check if the two matrix are valid, then check if they have equal size
+--          then add matrix
+-- addRow: iterare each row of the matrix
+-- addColumn: ie=terate each column of the current row, add together
 addMat :: DoubleMatrix -> DoubleMatrix -> (Maybe DoubleMatrix)
 addMat [] [] = Just []
 addMat x [] = Nothing
@@ -233,13 +278,20 @@ addMat x y =    let
                         | validate x != True    = Nothing
                         | validate y != True    = Nothing
                         | (size x) != (size y)  = Nothing
-                        | otherwise             = Just(addColumn x y [])
-                    addColumn [] [] res = res
-                    addColumn (x:xs) (y:ys) res = (addRow x y []):(addColumn xs ys res)
+                        | otherwise             = Just(addRow x y [])
                     addRow [] [] res = res
-                    addRow (x:xs) (y:ys) res = (x + y):(addRow xs ys res)
+                    addRow (x:xs) (y:ys) res = (addColumn x y []):(addRow xs ys res)
+                    addColumn [] [] res = res
+                    addColumn (x:xs) (y:ys) res = (x + y):(addColumn xs ys res)
                 in addMat' x y
 
+-- Multiplication of Matrix
+-- multMat': Check if two matrix are valid, 
+--           and if column amount of first is equal to row amount of second matrix
+--           then multiply
+-- multRow: iterate each row of the first matrix
+-- multColumn: iterate each column of the second matrix
+-- multList: multiply the two together
 multMat :: DoubleMatrix -> DoubleMatrix -> (Maybe DoubleMatrix)
 multMat [] [] = Just []
 multMat x y =   let
@@ -274,6 +326,7 @@ isAVL:: (Ord a, Integral a) => STree a -> Bool
 isAVL _ = True
 
 -- 9
+-- Calculate the product from 1 to 1891, is the result of (1891!)
 fact :: Integer
 fact = product [1..1891]
 
