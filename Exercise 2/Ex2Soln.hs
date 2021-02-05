@@ -26,11 +26,16 @@ import Prelude hiding (maybe, flip, curry, zipWith, foldr, filter, splitAt, leng
 main :: IO ()
 -- main = print (bsort (<) [-2,6,-4,8,0,3])
 -- main = print (multMat [[1.0,2.0,3.0], [4.0,5.0,6.0]] [[7,8], [9,10], [1,12]])
--- main = print(bisection f (-14 ,9))
+-- main = print(bisection f1 (2.215, 2.217))
+-- main = print(bisection f2 (-2, 2))
 -- main = print(bisection cos (3*pi/2,pi/2))
-main = print(fact)
+main = print(bisection cos (0,pi))
+-- main = print(bisection cos (pi,pi))
+-- main = print(bisection cos (0,0))
+-- main = print(fact)
 
-f x = x
+f1 x = (x - 3.3537435) ^ 3 + 1.4734366
+f2 x = x ^ 2
 
 -- reverse
 reverse :: [a] -> [a]
@@ -134,20 +139,24 @@ collatzIndex n = let
 
 -- 4
 e :: Double
-e = exp (-150)
+e = exp (-34)
 
 bisection::(Double->Double)->(Double,Double)->Maybe Double
 bisection f (a, b)
-    | a == b && not (f a < e)       = Nothing
-    | not (diffSign (f a) (f b))    = Nothing
-    | (f a) < e                     = Just m
-    | (f b) < e                     = Just m
-    | (f m) < e                     = Just m
-    | diffSign (f a) (f m)          = bisection f (a, m)
-    | diffSign (f b) (f m)          = bisection f (m, b)
+    | not (diffSign fa fb)          = Nothing
+    | (abs fm) < e                  = Just m
+    | (abs fm) < e                  = Just m
+    | (abs fm) < e                  = Just m
+    | d < e                         = Just m
+    | diffSign fa fm                = bisection f (a, m)
+    | diffSign fb fm                = bisection f (m, b)
     | otherwise                     = Nothing
     where
         m = (a + b) / 2
+        d = (b - a) / 2
+        fa = f a
+        fb = f b
+        fm = f m
         diffSign a b
             | a < 0 && b > 0 = True
             | a > 0 && b < 0 = True
