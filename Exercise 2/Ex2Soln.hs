@@ -19,15 +19,16 @@ Good luck!
 
 module Submission where
 
-import Prelude hiding (maybe, flip, curry, zipWith, foldr, filter, splitAt, length, (++), foldl, take, drop, const, reverse, map)
+import Prelude hiding (maybe, flip, curry, zipWith, foldr, filter, splitAt, length, (++), foldl, take, drop, const, reverse, map, product)
 
 
 
 main :: IO ()
 -- main = print (bsort (<) [-2,6,-4,8,0,3])
 -- main = print (multMat [[1.0,2.0,3.0], [4.0,5.0,6.0]] [[7,8], [9,10], [1,12]])
-main = print(bisection f (-14.694660207026711,9.811539059778882))
+-- main = print(bisection f (-14 ,9))
 -- main = print(bisection cos (3*pi/2,pi/2))
+main = print(fact)
 
 f x = x
 
@@ -47,6 +48,11 @@ drop :: Int -> [a] -> [a]
 drop _ [] = []
 drop 0 list = list
 drop size (x:xs) = drop (size - 1) xs
+
+--product
+product :: (Num a) => [a] -> a
+product [] = 1
+product (x:xs) = x * (product xs)
 
 -- (++)
 (++) :: [a] -> [a] -> [a]
@@ -136,7 +142,7 @@ bisection f (a, b)
     | not (diffSign (f a) (f b))    = Nothing
     | (f a) < e                     = Just m
     | (f b) < e                     = Just m
-    | abs (f m) < e                 = Just m
+    | (f m) < e                     = Just m
     | diffSign (f a) (f m)          = bisection f (a, m)
     | diffSign (f b) (f m)          = bisection f (m, b)
     | otherwise                     = Nothing
@@ -260,7 +266,7 @@ isAVL _ = True
 
 -- 9
 fact :: Integer
-fact  = 0
+fact = product [1..1891]
 
 -- 10
 data Rose a = RS a [Rose a]   deriving (Show)
