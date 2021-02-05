@@ -25,9 +25,11 @@ import Prelude hiding (maybe, flip, curry, zipWith, foldr, filter, splitAt, leng
 
 main :: IO ()
 -- main = print (bsort (<) [-2,6,-4,8,0,3])
-main = print (multMat [[1.0,2.0,3.0], [4.0,5.0,6.0]] [[7,8], [9,10], [1,12]])
+-- main = print (multMat [[1.0,2.0,3.0], [4.0,5.0,6.0]] [[7,8], [9,10], [1,12]])
+main = print(bisection f (-14.694660207026711,9.811539059778882))
+-- main = print(bisection cos (3*pi/2,pi/2))
 
-f a b = a // 2 > b
+f x = x
 
 -- reverse
 reverse :: [a] -> [a]
@@ -129,8 +131,21 @@ e :: Double
 e = exp (-150)
 
 bisection::(Double->Double)->(Double,Double)->Maybe Double
--- Provide your answer below
-bisection _ _ =  Just 0.0
+bisection f (a, b)
+    | a == b && not (f a < e)       = Nothing
+    | not (diffSign (f a) (f b))    = Nothing
+    | (f a) < e                     = Just m
+    | (f b) < e                     = Just m
+    | abs (f m) < e                 = Just m
+    | diffSign (f a) (f m)          = bisection f (a, m)
+    | diffSign (f b) (f m)          = bisection f (m, b)
+    | otherwise                     = Nothing
+    where
+        m = (a + b) / 2
+        diffSign a b
+            | a < 0 && b > 0 = True
+            | a > 0 && b < 0 = True
+            | otherwise      = False
 
 -- 5
 bsort:: Integral a => (a -> a -> Bool) -> [a] -> [a]
