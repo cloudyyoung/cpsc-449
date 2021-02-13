@@ -1,0 +1,7 @@
+
+mystery :: (Eq a) => [a] -> SF a
+mystery xs = foldr (\x y -> if (fst x == snd x) then SS (fst x) else y) FF (myzip xs (mytail xs))
+
+-- Base case: FF, no repeated character next to each other
+-- Steps: if the current pair has two same values, then return SS with the first element of the pair
+--        else, move on to next pair

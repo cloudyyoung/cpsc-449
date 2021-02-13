@@ -1,0 +1,12 @@
+
+myOR [False, True, False] ?
+
+foldr myor False [False, True, False] -- The input falls in foldrpattern #2, myOR is a partial application which the list is appened to the last
+myor False (foldr False myor [True, False]) -- The input falls in foldr pattern #2
+    myor False (myor True (foldr False myor [False])) -- The input falls in foldr pattern #2
+        myor False (myor True (myor False (foldr False myor []))) -- The input falls in foldr pattern #1
+            myor False (myor True (myor False False)) -- The input falls in myor pattern #1
+        myor False (myor True False) -- The input falls in myor pattern #2
+    myor False True -- The input falls in myor pattern #2
+True -- The input falls in myor pattern #2
+            

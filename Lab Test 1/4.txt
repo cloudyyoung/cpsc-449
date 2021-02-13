@@ -1,0 +1,12 @@
+
+grow :: String -> String
+grow string = [y | (char, times) <- (zip string [1..]), y <- (replicate times char)]
+
+zip :: [a] -> [b] -> [(a, b)]
+zip _ [] = []
+zip [] _ = []
+zip (a:ax) (b:bx) = (a, b):(zip ax bx)
+
+replicate :: Int -> a -> [a]
+replicate 0 _ = []
+replicate t a = a:(replicate (t-1) a)

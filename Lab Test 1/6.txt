@@ -1,0 +1,47 @@
+
+Proof: filter p (append xs ys) = append (filter p xs) (filter p ys)
+
+1)  For base case, we want to show: 
+        filter p (append [] ys) = append (filter p []) (filter p ys)
+2)  For inductive steps, we want to show: 
+        filter p (append (x:xs) ys) = append (filter p (x:xs)) (filter p ys)
+    on the hypothesis that:
+        filter p (append xs ys) = append (filter p xs) (filter p ys)
+
+
+
+Base:
+LHS = filter p (append [] ys)               by (append pattern #1)
+    = filter p ys
+
+
+RHS = append (filter p []) (filter p ys)    by (filter pattern #1)
+    = append [] (filter p ys)               by (append pattern #1)
+    = filter p ys
+
+LHS = RHS []
+
+
+Inductive Steps:
+
+(p a) is True case:
+    LHS = filter p (append (x:xs) ys)           by (append pattern #2)
+        = filter p (x:(append xs ys))           by (filter pattern #2)
+        = x:(filter p (append xs ys))
+
+    RHS = append (filter p (x:xs)) (filter p ys)    by (filter pattern #2)
+        = append (x:(filter p xs)) (filter p ys)    by (append pattern #2)
+        = x:(append (filter p xs) (filter p ys))    by (hyp)
+        = x:(filter p (append xs ys))
+
+Otherwise case:
+    LHS = filter p (append (x:xs) ys)           by (append pattern #2)
+        = filter p (x:(append xs ys))           by (filter pattern #2)
+        = filter p (append xs ys)
+
+    RHS = append (filter p (x:xs)) (filter p ys)    by (filter pattern #2)
+        = append (filter p xs) (filter p ys)        by (hyp)
+        = filter p (append xs ys)
+
+
+LHS = RHS (for all cases) []
