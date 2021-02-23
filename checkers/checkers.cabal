@@ -3,7 +3,7 @@ cabal-version:       >=1.10
 -- init'.  For further documentation, see
 -- http://haskell.org/cabal/users-guide/
 
-name:                Checkers
+name:                YangCheckers
 version:             0.1.0.0
 -- synopsis:
 -- description:
@@ -17,7 +17,7 @@ maintainer:          benjamin.macadam@ucalgary.ca
 build-type:          Simple
 extra-source-files:  CHANGELOG.md
 
-executable Checkers
+executable YangCheckers
   ghc-options:  -threaded
   main-is:             Main.hs
   hs-source-dirs: src
