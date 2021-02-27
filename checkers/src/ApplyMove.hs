@@ -22,7 +22,7 @@ make_simple_move [pc_start,pc_end] g
     | (status g) == (Turn Black) && elem start (blackPieces g) && is_king end (Turn Black)  = g' {blackPieces = remove start (blackPieces g), blackKings = end:(blackKings g)}
     | (status g) == (Turn Black) && elem start (blackPieces g)                              = g' {blackPieces = replace start end (blackPieces g)}
     | (status g) == (Turn Red)   && elem start (redKings g)                                 = g' {redKings    = replace start end (redKings g)}
-    | (status g) == (Turn Red)   && elem start (redPieces g)   && is_king end (Turn Red)    = g' {redPieces   = remove start (redPieces g), redKings = end:(redKings g)}
+    | (status g) == (Turn Red)   && elem start (redPieces g)   && is_king end (Turn Red)    = g' {redPieces   = remove start (redPieces g),     redKings = end:(redKings g)}
     | (status g) == (Turn Red)   && elem start (redPieces g)                                = g' {redPieces   = replace start end (redPieces g)}
     | otherwise                                                                             = gx
     where
@@ -33,17 +33,23 @@ make_simple_move [pc_start,pc_end] g
 
 
 make_jump_move :: Move -> GameState -> GameState
+make_jump_move [] g = g {status = change_player (status g), message = ""}
+make_jump_move [pc_end] g = make_jump_move [] g
 make_jump_move (pc_start:pc_next:rest) g
-    | (status g) == (Turn Black) && elem start (blackKings g)                               = undefined
-    | (status g) == (Turn Black) && elem start (blackPieces g) && is_king next (Turn Black) = undefined
-    | (status g) == (Turn Black) && elem start (blackPieces g)                              = undefined
-    | (status g) == (Turn Red)   && elem start (redKings g)                                 = make_jump_move (pc_next:rest) (g {blackKings = remove (jumped start next) (blackKings g), blackPieces = remove (jumped start next) (blackPieces g), redKings = replace start next (redKings g), message = ""})
-    | (status g) == (Turn Red)   && elem start (redPieces g)   && is_king next (Turn Red)   = undefined
-    | (status g) == (Turn Red)   && elem start (redPieces g)                                = undefined
-    | otherwise                                                                             = g {message = "invalid make_jump_move"}
+    | (status g) == (Turn Black) && elem start (blackKings g)                               = make_jump_move (pc_next:rest) (gb {blackKings  = replace start next (blackKings g)})
+    | (status g) == (Turn Black) && elem start (blackPieces g) && is_king next (Turn Black) = make_jump_move (pc_next:rest) (gb {blackKings  = next:(blackKings g), blackPieces = remove start (blackPieces g)})
+    | (status g) == (Turn Black) && elem start (blackPieces g)                              = make_jump_move (pc_next:rest) (gb {blackPieces = replace start next (blackPieces g)})
+    | (status g) == (Turn Red)   && elem start (redKings g)                                 = make_jump_move (pc_next:rest) (gr {redKings    = replace start next (redKings g)})
+    | (status g) == (Turn Red)   && elem start (redPieces g)   && is_king next (Turn Red)   = make_jump_move (pc_next:rest) (gr {redKings    = next:(redKings g),     redPieces = remove start (redPieces g)})
+    | (status g) == (Turn Red)   && elem start (redPieces g)                                = make_jump_move (pc_next:rest) (gr {redPieces   = replace start next (redPieces g)})
+    | otherwise                                                                             = gx
     where
         start = porkcoord_to_coord pc_start
         next  = porkcoord_to_coord pc_next
+        jump  = jumped start next
+        gb    = g {redKings   = remove jump (redKings g),   redPieces   = remove jump (redPieces g)}
+        gr    = g {blackKings = remove jump (blackKings g), blackPieces = remove jump (blackPieces g)}
+        gx    = g {message = "Invalid jump move"}
 
 -- is_king is defined in Moves.hs
 
