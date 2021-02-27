@@ -39,9 +39,8 @@ jump_moves g = case (status g) of
                                     ((x',y'),(x'',y'')) <- [((x + 1,y + dir),(x + 2,y + 2 * dir)),((x - 1,y + dir),(x - 2,y + 2 * dir))], 
                                     not(elem (x',y') rem), 
                                     opponent_occupied (x',y') g, 
-                                    start == (x'', y''), 
-                                    notoccupied (x'',y'') g, 
-                                    onboard (x'', y''), 
+                                    notoccupied (x'',y'') g || start == (x'', y''), 
+                                    onboard (x'', y''),
                                     ys <- if (is_king (x'',y'')) 
                                           then jump_over (jump_king' start ((x',y'):rem) (x'',y'')) 
                                           else jump_over (jump_piece' start ((x',y'):rem) (x'',y''))]
@@ -50,9 +49,8 @@ jump_moves g = case (status g) of
                                     ((x',y'),(x'',y'')) <- [((x + 1,y + 1),(x + 2,y + 2)), ((x - 1,y + 1),(x - 2,y + 2)), ((x + 1,y - 1),(x + 2,y - 2)), ((x - 1,y - 1),(x - 2,y - 2))], 
                                     not(elem (x',y') rem), 
                                     opponent_occupied (x',y') g, 
-                                    start == (x'',y''), 
-                                    notoccupied (x'',y'') g, 
-                                    onboard (x'',y''), 
+                                    notoccupied (x'',y'') g || start == (x'', y''), 
+                                    onboard (x'', y''), 
                                     ys <- jump_over (jump_king' start ((x',y'):rem) (x'',y''))]
     dir                         = case (status g) of 
                                     (Turn Red) -> -1
