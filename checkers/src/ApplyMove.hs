@@ -4,11 +4,13 @@ import Moves
 import Checkers.Types
 
 
-
 apply_move :: Move -> GameState -> GameState
-apply_move m g
-    | inmoves m (moves g) = undefined
-    | otherwise = g{message = "Illegal move!!"}
+apply_move move g
+    | null (redKings g) && null (redPieces g)       = g {status = GameOver, message = "Black wins"}
+    | null (blackKings g) && null (blackPieces g)   = g {status = GameOver, message = "Red wins"}
+    | elem move (jump_moves g)                      = make_jump_move move g
+    | elem move (simple_moves g)                    = make_simple_move move g
+    | otherwise                                     = g {message = "Illegal move"}
 
 
 make_simple_move :: PieceState -> GameState -> GameState
