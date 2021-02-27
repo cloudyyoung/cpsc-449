@@ -13,8 +13,8 @@ simple_moves g = case (status g) of
     (Turn Red)   -> (simple_piece (redPieces g)) ++ (simple_king (redKings g))
     GameOver     -> []
   where
-    simple_piece xs = [[(x,y), (x',y')] | (x,y) <- xs, (x',y') <- [(x + 1,y + dir), (x - 1,y + dir)], notoccupied (x',y') g, onboard (x',y')]
-    simple_king  xs = [[(x,y), (x',y')] | (x,y) <- xs, (x',y') <- [(x + 1,y + 1), (x + 1,y - 1), (x - 1,y + 1), (x - 1,y - 1)], notoccupied (x',y') g, onboard (x',y')]
+    simple_piece xs = [[P (x,y), P (x',y')] | (x,y) <- xs, (x',y') <- [(x + 1,y + dir), (x - 1,y + dir)], notoccupied (x',y') g, onboard (x',y')]
+    simple_king  xs = [[K (x,y), K (x',y')] | (x,y) <- xs, (x',y') <- [(x + 1,y + 1), (x + 1,y - 1), (x - 1,y + 1), (x - 1,y - 1)], notoccupied (x',y') g, onboard (x',y')]
     dir             = case (status g) of 
                         (Turn Red) -> -1
                         (Turn Black) -> 1
