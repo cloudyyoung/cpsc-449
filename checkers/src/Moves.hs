@@ -42,8 +42,8 @@ jump_moves g = case (status g) of
                                     notoccupied (x'',y'') g || start == (x'', y''), 
                                     onboard (x'', y''),
                                     coord'' <-  if (is_king (x'',y'')) g
-                                              then [K (x'',y'')]
-                                              else [P (x'',y'')],
+                                                then [K (x'',y'')]
+                                                else [P (x'',y'')],
                                     ys <- if (is_king (x'',y''))  g
                                           then jump_over (jump_king' start ((x',y'):rem) (x'',y'')) 
                                           else jump_over (jump_piece' start ((x',y'):rem) (x'',y''))]
