@@ -15,36 +15,30 @@ apply_move move g
 
 make_simple_move :: PieceState -> GameState -> GameState
 make_simple_move [start,end] g
-    | status g == (Turn Black) && elem start (blackKings g) 
-        = undefined
-    | status g == (Turn Black) && elem start (blackPieces g)
-        = if is_king end (Turn Black)
-            then undefined
-            else undefined
-    | status g == (Turn Red) && elem start (redKings g) 
-        = g{redKings = replace start end (redKings g)
-            , status = change_player g
-            , message = ""} 
-    | status g == (Turn Red) && elem start (redPieces g)
-        = if is_king end (Turn Red) 
-            then undefined
-            else undefined
-    | otherwise = g{message = "invalid make_simple_move"}
+    | (status g) == (Turn Black) && elem start (blackKings g)   = g {blackKings = (replace start end (blackKings g)), status = change_player g, message = ""}
+    | (status g) == (Turn Black) && elem start (blackPieces g)  = if is_king end (Turn Black)
+                                                                    then g {blackPieces = (remove start (blackPieces g)), blackKings = (start:(blackKings g)), status = change_player g, message = ""}
+                                                                    else g {blackPieces = (remove start (blackPieces g)), blackKings = (start:(blackKings g)), status = change_player g, message = ""}
+    | (status g) == (Turn Red) && elem start (redKings g)       = g {redKings = (replace start end (redKings g)), status = change_player g, message = ""}
+    | (status g) == (Turn Red) && elem start (redPieces g)      = if is_king end (Turn Red)
+                                                                    then undefined
+                                                                    else undefined
+    | otherwise                                                 = g {message = "invalid make_simple_move"}
 
 
 make_jump_move :: PieceState -> GameState -> GameState
-make_jump_move (start:next:rest) g 
+make_jump_move (start:next:rest) g
     | status g == (Turn Black) && elem start (blackKings g) = undefined
     | status g == (Turn Black) && elem start (blackPieces g)
         =   if is_king next (Turn Black)
             then undefined
             else undefined
-    | status g == (Turn Red) && elem start (redKings g) 
-        = make_jump_move (next:rest) (g{blackKings = remove (jumped start next) (blackKings g), 
+    | status g == (Turn Red) && elem start (redKings g)
+        = make_jump_move (next:rest) (g{blackKings = remove (jumped start next) (blackKings g),
                                         blackPieces = remove (jumped start next) (blackPieces g),
                                         redKings = next:(remove start (redKings g)),
                                         message = ""})
-    | status g == (Turn Red) && elem start (redPieces g) 
+    | status g == (Turn Red) && elem start (redPieces g)
         =   if is_king next (Turn Red)
             then undefined
             else undefined
@@ -61,7 +55,7 @@ remove :: (Eq a) => a -> [a] -> [a]
 remove _ []  = []
 remove x ys = [y | y <- ys, y /= x]
 
-change_player :: Status -> Status
+change_player :: GameState -> GameState
 change_player g = case (status g) of
                     (Turn Red)   -> (Turn Black)
                     (Turn Black) -> (Turn Red)
