@@ -13,8 +13,14 @@ simple_moves g = case (status g) of
     (Turn Red)   -> (simple_piece (redPieces g)) ++ (simple_king (redKings g))
     GameOver     -> []
   where
-    simple_piece xs = [[P (x,y), P (x',y')] | (x,y) <- xs, (x',y') <- [(x + 1,y + dir), (x - 1,y + dir)], notoccupied (x',y') g, onboard (x',y')]
-    simple_king  xs = [[K (x,y), K (x',y')] | (x,y) <- xs, (x',y') <- [(x + 1,y + 1), (x + 1,y - 1), (x - 1,y + 1), (x - 1,y - 1)], notoccupied (x',y') g, onboard (x',y')]
+    simple_piece xs = [[P (x,y), P (x',y')] | 
+                        (x,y) <- xs, (x',y') <- [(x + 1,y + dir), (x - 1,y + dir)], 
+                        notoccupied (x',y') g, 
+                        onboard (x',y')]
+    simple_king  xs = [[K (x,y), K (x',y')] | 
+                        (x,y) <- xs, (x',y') <- [(x + 1,y + 1), (x + 1,y - 1), (x - 1,y + 1), (x - 1,y - 1)], 
+                        notoccupied (x',y') g, 
+                        onboard (x',y')]
     dir             = case (status g) of 
                         (Turn Red) -> -1
                         (Turn Black) -> 1
@@ -26,12 +32,34 @@ jump_moves g = case (status g) of
     (Turn Red)   -> (jump_piece (redPieces g)) ++ (jump_king (redKings g))
     GameOver     -> []
   where
-    jump_over [] = [[]]
-    jump_over x = x
-    jump_piece xs = [(x,y):ys | (x,y) <- xs, ys <- jump_piece' (x,y) [] (x,y)]
-    jump_piece' start rem (x,y) = undefined
-    jump_king xs = [(x,y):ys | (x,y) <- xs, ys <- jump_king' (x,y) [] (x,y)]
-    jump_king' start rem (x,y) = [(x'',y''):ys | ((x',y'),(x'',y'')) <- [((x + 1,y + 1),(x + 2,y + 2)),((x - 1,y + 1),(x - 2,y + 2)),((x + 1,y - 1),(x + 2,y - 2)),((x - 1,y - 1),(x - 2,y - 2))], not(elem (x',y') rem), opponent_occupied (x',y') g, start == (x'',y''), notoccupied (x'',y'') g, onboard (x'',y''), ys <- jump_over (jump_king' start ((x',y'):rem) (x'',y''))]
+    jump_over []                = [[]]
+    jump_over x                 = x
+    jump_piece xs               = [(x,y):ys | (x,y) <- xs, ys <- jump_piece' (x,y) [] (x,y)]
+    jump_piece' start rem (x,y) = [(x'',y''):ys | 
+                                    ((x',y'),(x'',y'')) <- [((x + 1,y + dir),(x + 2,y + 2 * dir)),((x - 1,y + dir),(x - 2,y + 2 * dir))], 
+                                    not(elem (x',y') rem), 
+                                    opponent_occupied (x',y') g, 
+                                    start == (x'', y''), 
+                                    notoccupied (x'',y'') g, 
+                                    onboard (x'', y''), 
+                                    ys <- if (is_king (x'',y'')) 
+                                          then jump_over (jump_king' start ((x',y'):rem) (x'',y'')) 
+                                          else jump_over (jump_piece' start ((x',y'):rem) (x'',y''))]
+    jump_king xs                = [(x,y):ys | (x,y) <- xs, ys <- jump_king' (x,y) [] (x,y)]
+    jump_king' start rem (x,y)  = [(x'',y''):ys | 
+                                    ((x',y'),(x'',y'')) <- [((x + 1,y + 1),(x + 2,y + 2)), ((x - 1,y + 1),(x - 2,y + 2)), ((x + 1,y - 1),(x + 2,y - 2)), ((x - 1,y - 1),(x - 2,y - 2))], 
+                                    not(elem (x',y') rem), 
+                                    opponent_occupied (x',y') g, 
+                                    start == (x'',y''), 
+                                    notoccupied (x'',y'') g, 
+                                    onboard (x'',y''), 
+                                    ys <- jump_over (jump_king' start ((x',y'):rem) (x'',y''))]
+    dir                         = case (status g) of 
+                                    (Turn Red) -> -1
+                                    (Turn Black) -> 1
+    is_king (x,y)               = case (status g) of
+                                    (Turn Red) -> y == 0
+                                    (Turn Black) -> y == 7
 
 
 notoccupied :: Coord -> GameState -> Bool
