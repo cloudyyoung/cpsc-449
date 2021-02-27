@@ -6,11 +6,11 @@ import Checkers.Types
 
 apply_move :: Move -> GameState -> GameState
 apply_move move g
-    | null (redKings g) && null (redPieces g)       = g {status = GameOver, message = "Black wins"}
-    | null (blackKings g) && null (blackPieces g)   = g {status = GameOver, message = "Red wins"}
-    | elem move (jump_moves g)                      = make_jump_move move g
-    | elem move (simple_moves g)                    = make_simple_move move g
-    | otherwise                                     = g {message = "Illegal move"}
+    | null (redKings g) && null (redPieces g)           = g {status = GameOver, message = "Black wins"}
+    | null (blackKings g) && null (blackPieces g)       = g {status = GameOver, message = "Red wins"}
+    | elem move (jump_moves g)                          = make_jump_move move g
+    | elem move (simple_moves g) && null (jump_moves g) = make_simple_move move g
+    | otherwise                                         = g {message = "Illegal move! A jump is available:  " ++ show (jump_moves g)}
 
 
 porkcoord_to_coord :: PorK Coord -> Coord
