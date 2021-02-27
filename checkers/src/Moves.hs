@@ -34,8 +34,8 @@ jump_moves g = case (status g) of
   where
     jump_over []                = [[]]
     jump_over x                 = x
-    jump_piece xs               = [(x,y):ys | (x,y) <- xs, ys <- jump_piece' (x,y) [] (x,y)]
-    jump_piece' start rem (x,y) = [(x'',y''):ys | 
+    jump_piece xs               = [(P (x,y)):ys | (x,y) <- xs, ys <- jump_piece' (x,y) [] (x,y)]
+    jump_piece' start rem (x,y) = [(P (x'',y'')):ys | 
                                     ((x',y'),(x'',y'')) <- [((x + 1,y + dir),(x + 2,y + 2 * dir)),((x - 1,y + dir),(x - 2,y + 2 * dir))], 
                                     not(elem (x',y') rem), 
                                     opponent_occupied (x',y') g, 
@@ -45,8 +45,8 @@ jump_moves g = case (status g) of
                                     ys <- if (is_king (x'',y'')) 
                                           then jump_over (jump_king' start ((x',y'):rem) (x'',y'')) 
                                           else jump_over (jump_piece' start ((x',y'):rem) (x'',y''))]
-    jump_king xs                = [(x,y):ys | (x,y) <- xs, ys <- jump_king' (x,y) [] (x,y)]
-    jump_king' start rem (x,y)  = [(x'',y''):ys | 
+    jump_king xs                = [(K (x,y)):ys | (x,y) <- xs, ys <- jump_king' (x,y) [] (x,y)]
+    jump_king' start rem (x,y)  = [(K (x'',y'')):ys | 
                                     ((x',y'),(x'',y'')) <- [((x + 1,y + 1),(x + 2,y + 2)), ((x - 1,y + 1),(x - 2,y + 2)), ((x + 1,y - 1),(x + 2,y - 2)), ((x - 1,y - 1),(x - 2,y - 2))], 
                                     not(elem (x',y') rem), 
                                     opponent_occupied (x',y') g, 
