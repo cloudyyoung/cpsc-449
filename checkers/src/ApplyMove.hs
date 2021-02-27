@@ -24,11 +24,12 @@ make_simple_move [pc_start,pc_end] g
     | (status g) == (Turn Red)   && elem start (redKings g)                                 = g' {redKings    = replace start end (redKings g)}
     | (status g) == (Turn Red)   && elem start (redPieces g)   && is_king end (Turn Red)    = g' {redPieces   = remove start (redPieces g), redKings = end:(redKings g)}
     | (status g) == (Turn Red)   && elem start (redPieces g)                                = g' {redPieces   = replace start end (redPieces g)}
-    | otherwise                                                                             = g  {message     = "Invalid simple move"}
+    | otherwise                                                                             = gx
     where
         start = porkcoord_to_coord pc_start
         end   = porkcoord_to_coord pc_end
         g'    = g {status = change_player (status g), message = "", history = [pc_start,pc_end]:(history g)}
+        gx    = g {message = "Invalid simple move"}
 
 
 make_jump_move :: Move -> GameState -> GameState
