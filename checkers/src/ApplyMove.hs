@@ -31,27 +31,25 @@ make_simple_move [start,end] g
 
 
 make_jump_move :: PieceState -> GameState -> GameState
-make_jump_move (start:(next:rest)) g 
-    | status g == (Turn Black) && elem start (blackKings g) 
-        = undefined
-    | status g == (Turn Black) && elem start (blackPieces g) 
-        = if is_king next (Turn Black)
+make_jump_move (start:next:rest) g 
+    | status g == (Turn Black) && elem start (blackKings g) = undefined
+    | status g == (Turn Black) && elem start (blackPieces g)
+        =   if is_king next (Turn Black)
             then undefined
             else undefined
-    | status g == (Turn Red) && elem start (redKings g)
-        = make_jump_move (next:rest)
-                (st{blackKings = remove (jumped start next) (blackKings g)
-                    , blackPieces = remove (jumped start next) (blackPieces g)
-                    , redKings = next:(remove start (redKings g))
-                    , message = ""})
-    | status g == (Turn Red) && elem start (redPieces g)
-        = if is_king next (Turn Red)
+    | status g == (Turn Red) && elem start (redKings g) 
+        = make_jump_move (next:rest) (g{blackKings = remove (jumped start next) (blackKings g), 
+                                        blackPieces = remove (jumped start next) (blackPieces g),
+                                        redKings = next:(remove start (redKings g)),
+                                        message = ""})
+    | status g == (Turn Red) && elem start (redPieces g) 
+        =   if is_king next (Turn Red)
             then undefined
             else undefined
     | otherwise = g{message = "invalid make_jump_move"}
 
 
-is_king = undefined
+-- is_king is defined in Moves.hs
 
 replace :: Eq a => a -> a -> [a] -> [a]
 replace _ _ [] = []
@@ -61,7 +59,7 @@ remove :: (Eq a) => a -> [a] -> [a]
 remove _ []  = []
 remove x ys = [y | y <- ys, y /= x]
 
-change_player :: GameState -> GameState
+change_player :: Status -> Status
 change_player g = case (status g) of
                     (Turn Red)   -> (Turn Black)
                     (Turn Black) -> (Turn Red)
