@@ -33,20 +33,21 @@ make_simple_move [pc_start,pc_end] g
 
 
 make_jump_move :: Move -> GameState -> GameState
-make_jump_move [] g = g {status = change_player (status g), message = ""}
-make_jump_move [pc_end] g = make_jump_move [] g
+make_jump_move [pc_end] g = g {status = change_player (status g), message = "", history = [pc_end]:(history g)}
 make_jump_move (pc_start:pc_next:rest) g
-    | (status g) == (Turn Black) && elem start (blackKings g)                               = make_jump_move (pc_next:rest) (gb {blackKings  = replace start next (blackKings g)})
-    | (status g) == (Turn Black) && elem start (blackPieces g) && is_king next (Turn Black) = make_jump_move (pc_next:rest) (gb {blackKings  = next:(blackKings g), blackPieces = remove start (blackPieces g)})
-    | (status g) == (Turn Black) && elem start (blackPieces g)                              = make_jump_move (pc_next:rest) (gb {blackPieces = replace start next (blackPieces g)})
-    | (status g) == (Turn Red)   && elem start (redKings g)                                 = make_jump_move (pc_next:rest) (gr {redKings    = replace start next (redKings g)})
-    | (status g) == (Turn Red)   && elem start (redPieces g)   && is_king next (Turn Red)   = make_jump_move (pc_next:rest) (gr {redKings    = next:(redKings g),     redPieces = remove start (redPieces g)})
-    | (status g) == (Turn Red)   && elem start (redPieces g)                                = make_jump_move (pc_next:rest) (gr {redPieces   = replace start next (redPieces g)})
+    | (status g) == (Turn Black) && elem start (blackKings g)                               = gj (gb {blackKings  = replace start next (blackKings g)})
+    | (status g) == (Turn Black) && elem start (blackPieces g) && is_king next (Turn Black) = gj (gb {blackKings  = next:(blackKings g), blackPieces = remove start (blackPieces g)})
+    | (status g) == (Turn Black) && elem start (blackPieces g)                              = gj (gb {blackPieces = replace start next (blackPieces g)})
+    | (status g) == (Turn Red)   && elem start (redKings g)                                 = gj (gr {redKings    = replace start next (redKings g)})
+    | (status g) == (Turn Red)   && elem start (redPieces g)   && is_king next (Turn Red)   = gj (gr {redKings    = next:(redKings g),     redPieces = remove start (redPieces g)})
+    | (status g) == (Turn Red)   && elem start (redPieces g)                                = gj (gr {redPieces   = replace start next (redPieces g)})
     | otherwise                                                                             = gx
     where
         start = porkcoord_to_coord pc_start
         next  = porkcoord_to_coord pc_next
         jump  = jumped start next
+        gj g' = gh (make_jump_move (pc_next:rest) g')
+        gh g' = g' {history = (pc_start:(head (history g'))):(tail (history g'))}
         gb    = g {redKings   = remove jump (redKings g),   redPieces   = remove jump (redPieces g)}
         gr    = g {blackKings = remove jump (blackKings g), blackPieces = remove jump (blackPieces g)}
         gx    = g {message = "Invalid jump move"}
