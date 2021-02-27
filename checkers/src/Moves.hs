@@ -41,10 +41,10 @@ jump_moves g = case (status g) of
                                     opponent_occupied (x',y') g, 
                                     notoccupied (x'',y'') g || start == (x'', y''), 
                                     onboard (x'', y''),
-                                    coord'' <-  if (is_king (x'',y'')) g
+                                    coord'' <-  if (is_king (x'',y'') g)
                                                 then [K (x'',y'')]
                                                 else [P (x'',y'')],
-                                    ys <- if (is_king (x'',y''))  g
+                                    ys <- if (is_king (x'',y'') g)
                                           then jump_over (jump_king' start ((x',y'):rem) (x'',y'')) 
                                           else jump_over (jump_piece' start ((x',y'):rem) (x'',y''))]
     jump_king xs                = [(K (x,y)):ys | (x,y) <- xs, ys <- jump_king' (x,y) [] (x,y)]
