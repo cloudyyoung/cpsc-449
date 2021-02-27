@@ -53,8 +53,16 @@ make_jump_move (start:(next:rest)) g
 
 is_king = undefined
 
-replace = undefined
+replace :: Eq a => a -> a -> [a] -> [a]
+replace _ _ [] = []
+replace x y zs = [if (z == x) then y else z | z <- zs]
 
-remove = undefined
+remove :: (Eq a) => a -> [a] -> [a]
+remove _ []  = []
+remove x ys = [y | y <- ys, y /= x]
 
-change_player = undefined
+change_player :: GameState -> GameState
+change_player g = case (status g) of
+                    (Turn Red)   -> (Turn Black)
+                    (Turn Black) -> (Turn Red)
+                    GameOver     -> GameOver
