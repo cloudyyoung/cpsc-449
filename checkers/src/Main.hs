@@ -1,10 +1,18 @@
 module Main where
 
-import Checkers.Types
-import Checkers.FrontEnd.Basic
-import Checkers.FrontEnd.Types
-
 import Moves
+import ApplyMove
+import Checkers.Types
+import Checkers.FrontEnd.Types
+--import qualified Checkers.FrontEnd.Basic as B
+import qualified Checkers.FrontEnd.Terminal as T
+
+
 
 main :: IO ()
-main = putStrLn "Hello, Haskell!"
+main = T.frontend $ GameConfig { engine = apply_move
+                               , blackMove = Human
+                               , redMove = Human
+                               , state = initialGameState }
+
+
