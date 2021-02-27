@@ -77,7 +77,7 @@ notoccupied (x,y) g
     | otherwise                   = True
 
 onboard :: Coord -> Bool
-onboard (x,y) = (0 <= x) && (x<=7) && (0 <= y) && (y <= 7)
+onboard (x,y) = (0 <= x) && (x <= 7) && (0 <= y) && (y <= 7)
 
 opponent_occupied :: Coord -> GameState -> Bool
 opponent_occupied (x,y) g
