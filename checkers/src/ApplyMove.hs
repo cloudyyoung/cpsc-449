@@ -8,30 +8,31 @@ apply_move :: Move -> GameState -> GameState
 apply_move move g
     | null (redKings g) && null (redPieces g)       = g {status = GameOver, message = "Black wins"}
     | null (blackKings g) && null (blackPieces g)   = g {status = GameOver, message = "Red wins"}
-    | elem move (jump_moves g)                      = make_jump_move (move_to_piecestate move) g
-    | elem move (simple_moves g)                    = make_simple_move (move_to_piecestate move) g
+    | elem move (jump_moves g)                      = make_jump_move move g
+    | elem move (simple_moves g)                    = make_simple_move move g
     | otherwise                                     = g {message = "Illegal move"}
+
 
 porkcoord_to_coord :: PorK Coord -> Coord
 porkcoord_to_coord (P x) = x
 porkcoord_to_coord (K x) = x
 
-move_to_piecestate :: Move -> PieceState
-move_to_piecestate [] = []
-move_to_piecestate (x:xs) = (porkcoord_to_coord x):(move_to_piecestate xs)
 
-make_simple_move :: PieceState -> GameState -> GameState
-make_simple_move [start,end] g
-    | (status g) == (Turn Black) && elem start (blackKings g)                               = g {blackKings = (replace start end (blackKings g)), status = (change_player (status g)), message = ""}
-    | (status g) == (Turn Black) && elem start (blackPieces g) && is_king end (Turn Black)  = g {blackPieces = (remove start (blackPieces g)), blackKings = (start:(blackKings g)), status = (change_player (status g)), message = ""}
-    | (status g) == (Turn Black) && elem start (blackPieces g)                              = g {blackPieces = (replace start end (blackPieces g)), status = (change_player (status g)), message = ""}
-    | (status g) == (Turn Red) && elem start (redKings g)                                   = g {redKings = (replace start end (redKings g)), status = (change_player (status g)), message = ""}
-    | (status g) == (Turn Red) && elem start (redPieces g) && is_king end (Turn Red)        = g {redPieces = (remove start (redPieces g)), redKings = (start:(redKings g)), status = (change_player (status g)), message = ""}
-    | (status g) == (Turn Red) && elem start (redPieces g)                                  = g {redPieces = (replace start end (redPieces g)), status = (change_player (status g)), message = ""}
+make_simple_move :: Move -> GameState -> GameState
+make_simple_move [pc_start,pc_end] g
+    | (status g) == (Turn Black) && elem start (blackKings g)                               = g {blackKings = (replace start end (blackKings g)), status = (change_player (status g)), message = "", history = ([pc_start,pc_end]:(history g))}
+    | (status g) == (Turn Black) && elem start (blackPieces g) && is_king end (Turn Black)  = g {blackPieces = (remove start (blackPieces g)), blackKings = (start:(blackKings g)), status = (change_player (status g)), message = "", history = ([pc_start,pc_end]:(history g))}
+    | (status g) == (Turn Black) && elem start (blackPieces g)                              = g {blackPieces = (replace start end (blackPieces g)), status = (change_player (status g)), message = "", history = ([pc_start,pc_end]:(history g))}
+    | (status g) == (Turn Red)   && elem start (redKings g)                                 = g {redKings = (replace start end (redKings g)), status = (change_player (status g)), message = "", history = ([pc_start,pc_end]:(history g))}
+    | (status g) == (Turn Red)   && elem start (redPieces g)   && is_king end (Turn Red)    = g {redPieces = (remove start (redPieces g)), redKings = (start:(redKings g)), status = (change_player (status g)), message = "", history = ([pc_start,pc_end]:(history g))}
+    | (status g) == (Turn Red)   && elem start (redPieces g)                                = g {redPieces = (replace start end (redPieces g)), status = (change_player (status g)), message = "", history = ([pc_start,pc_end]:(history g))}
     | otherwise                                                                             = g {message = "Invalid simple move"}
+    where
+        start = porkcoord_to_coord pc_start
+        end   = porkcoord_to_coord pc_end
 
 
-make_jump_move :: PieceState -> GameState -> GameState
+make_jump_move :: Move -> GameState -> GameState
 make_jump_move (start:next:rest) g = g
     -- | status g == (Turn Black) && elem start (blackKings g) = undefined
     -- | status g == (Turn Black) && elem start (blackPieces g)
