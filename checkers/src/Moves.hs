@@ -35,13 +35,13 @@ jump_moves g = case (status g) of
     jump_over []                = [[]]
     jump_over x                 = x
     jump_piece xs               = [(P (x,y)):ys | (x,y) <- xs, ys <- jump_piece' (x,y) [] (x,y)]
-    jump_piece' start rem (x,y) = [coord:ys | 
+    jump_piece' start rem (x,y) = [coord'':ys | 
                                     ((x',y'),(x'',y'')) <- [((x + 1,y + (dir g)),(x + 2,y + 2 * (dir g))),((x - 1,y + (dir g)),(x - 2,y + 2 * (dir g)))], 
                                     not(elem (x',y') rem), 
                                     opponent_occupied (x',y') g, 
                                     notoccupied (x'',y'') g || start == (x'', y''), 
                                     onboard (x'', y''),
-                                    coord <-  if (is_king (x'',y'')) g
+                                    coord'' <-  if (is_king (x'',y'')) g
                                               then [K (x'',y'')]
                                               else [P (x'',y'')],
                                     ys <- if (is_king (x'',y''))  g
