@@ -27,9 +27,9 @@ moves g = (simple_moves g, jump_moves g)
 -}
 simple_moves :: GameState -> [Move]
 simple_moves g = case (status g) of
-	(Turn Black) -> (simple_piece (blackPieces g)) ++ (simple_king (blackKings g))
-	(Turn Red)   -> (simple_piece (redPieces g)) ++ (simple_king (redKings g))
-	GameOver     -> []
+		(Turn Black) -> (simple_piece (blackPieces g)) ++ (simple_king (blackKings g))
+		(Turn Red)   -> (simple_piece (redPieces g)) ++ (simple_king (redKings g))
+		GameOver     -> []
   	where
 		simple_piece xs = [[P (x,y), coord' (x',y')] |
 							(x,y) <- xs, (x',y') <- [(x + 1,y + (dir g)), (x - 1,y + (dir g))],
@@ -64,9 +64,9 @@ simple_moves g = case (status g) of
 -}  
 jump_moves :: GameState -> [Move]
 jump_moves g = case (status g) of
-    (Turn Black) -> (jump_piece (blackPieces g)) ++ (jump_king (blackKings g))
-    (Turn Red)   -> (jump_piece (redPieces g)) ++ (jump_king (redKings g))
-    GameOver     -> []
+		(Turn Black) -> (jump_piece (blackPieces g)) ++ (jump_king (blackKings g))
+		(Turn Red)   -> (jump_piece (redPieces g)) ++ (jump_king (redKings g))
+		GameOver     -> []
   	where
 		jump_over []                = [[]]
 		jump_over x                 = x
