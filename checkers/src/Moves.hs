@@ -15,15 +15,19 @@ moves g = (simple_moves g, jump_moves g)
                 	For black, every piece can move to (x + 1, y + 1) or (x - 1, y + 1).
                 	If the slot is not occupied (not placed with anything)
                 	and it is on the board (a valid slot),
+					and it is not repeated state,
                 	then it is a possible for this piece move from current slot
                 	to the slot.
   	simply_king:  	For both colors, can move to (x + 1, y + 1), (x + 1, y - 1), (x - 1, y + 1), (x - 1, y - 1).
                 	If the slot is not occupied (not placed with anything)
                 	and it is on the board (a valid slot),
+					and it is not repeated state,
                 	then it is a possible for this king move from current slot
                 	to the slot.
   	coord':       	Decide if current piece should turn into king piece,
                 	assign KorP to the corrdinate.
+	not_repeat:		Returns true if it is a repeated state, 
+					namely there was a same step happened in the history but in backwards.
 -}
 simple_moves :: GameState -> [Move]
 simple_moves g = case (status g) of
@@ -34,14 +38,18 @@ simple_moves g = case (status g) of
 		simple_piece xs = [[P (x,y), coord' (x',y')] |
 							(x,y) <- xs, (x',y') <- [(x + 1,y + (dir g)), (x - 1,y + (dir g))],
 							notoccupied (x',y') g,
-							onboard (x',y')]
+							onboard (x',y'),
+							not_repeat [P (x,y), coord' (x',y')]]
 		simple_king  xs = [[K (x,y), K (x',y')] |
 							(x,y) <- xs, (x',y') <- [(x + 1,y + 1), (x + 1,y - 1), (x - 1,y + 1), (x - 1,y - 1)],
 							notoccupied (x',y') g,
-							onboard (x',y')]
+							onboard (x',y'),
+							not_repeat [K (x,y), K (x',y')]]
 		coord' (x,y)    = if is_king (x,y) (status g)
 							then K (x,y)
 							else P (x,y)
+		not_repeat [a,b] = not(elem [b,a] (history g))
+
 
 
 {-
