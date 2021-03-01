@@ -53,10 +53,10 @@ simple_moves g = case (status g) of
   	jump_piece':  	Get following coordinate for a given start coordiante.
                 	For red, every piece can move to (x + 2, y + 2) and (x - 2, y + 2),
                 	if respectively, (x + 1, y + 1) and (x - 1, y + 1) is occupied by oponent,
-                	and not occupied by anything.
+                	and the destination is not occupied by anything.
                 	For black, every piece can move to (x + 2, y - 2) and (x - 2, y - 2),
                 	if respectively, (x + 1, y - 1) and (x - 1, y - 1) is occupied by oponent,
-                	and not occupied by anything.
+                	and the destination is not occupied by anything.
                 	If a piece is passing the oponent's boundary, it turns into and continue as King,
   	jump_king:    	Get rest of the king steps for each king, 
                 	concate with the starting coordinate.
