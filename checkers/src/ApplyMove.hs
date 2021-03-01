@@ -112,6 +112,9 @@ remove :: (Eq a) => a -> [a] -> [a]
 remove _ [] = []
 remove x ys = [y | y <- ys, y /= x]
 
+{-
+    Change current play in a game state.
+-}
 change_player :: Status -> Status
 change_player status = case status of
                         (Turn Red)   -> (Turn Black)
@@ -124,4 +127,7 @@ change_player status = case status of
 middle :: Coord -> Coord -> Coord
 middle (x,y) (x',y') = ((x + x') // 2, (y + y') // 2)
 
+{-
+    Divide + floor.
+-}
 (//) = quot
