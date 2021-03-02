@@ -27,7 +27,7 @@ moves g = (simple_moves g, jump_moves g)
   	coord':       	Decide if current piece should turn into king piece,
                 	assign KorP to the corrdinate.
 	not_repeat:		Returns true if it is a repeated state, 
-					namely there was a same step happened in the history but in backwards.
+					namely the previous step was a same step happened but in backwards.
 -}
 simple_moves :: GameState -> [Move]
 simple_moves g = case (status g) of
@@ -48,7 +48,9 @@ simple_moves g = case (status g) of
 		coord' (x,y)    = if is_king (x,y) (status g)
 							then K (x,y)
 							else P (x,y)
-		not_repeat [a,b] = not(elem [b,a] (history g))
+		not_repeat [a,b] = if length (history g) > 2 
+							then (history g) !! 1 /= [b,a] 
+							else True
 
 
 
