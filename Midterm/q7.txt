@@ -1,0 +1,39 @@
+
+Proof: map (f.g) xs = map f (map g xs)
+
+1)  For base case, we want to show: 
+        map (f.g) [] = map f (map g [])
+2)  For inductive steps, we want to show: 
+        map (f.g) (x:xs) = map f (map g (x:xs))
+    on the hypothesis that:
+        map (f.g) xs = map f (map g xs)
+
+
+
+Base:
+LHS = map (f.g) []          by (map pattern #1)
+    = []
+
+
+RHS = map f (map g [])      by (map pattern #1)
+    = map f []              by (map pattern #1)
+    = []
+
+LHS = RHS []
+
+
+
+Inductive Steps:
+
+LHS = map (f.g) (x:xs)                  by (map pattern #2)
+    = (f.g x) : (map (f.g) xs)          by (hyp)
+    = (f.g x) : (map f (map g xs))
+
+
+RHS = map f (map g (x:xs))              by (map pattern #2)
+    = map f ((g x) : (map g xs))        by (map pattern #2)
+    = (f g(x)) : (map f (map g xs))     by (f.g pattern)
+    = (f.g x) : (map f (map g xs))
+
+
+LHS = RHS []

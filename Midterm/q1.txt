@@ -1,0 +1,98 @@
+ord_inlist 2 [1,4,8,11,22] ?
+foldr (\a b -> a == 2 || (2 >= a && b)) False [1,4,8,11,22]     %Sub RHS
+foldr (\a b -> a == 2 || (2 >= a && b)) False [1,4,8,11,22] =: foldr f b []
+    ... match fails
+foldr (\a b -> a == 2 || (2 >= a && b)) False [1,4,8,11,22] =: foldr f b (x:xs)
+    ... match [f := (\a b -> a == 2 || (2 >= a && b)), b := False, x := 1, xs := [4,8,11,22]]
+f b (foldr f b xs) [f := (\a b -> a == 2 || (2 >= a && b)), b := False, x := 1, xs := [4,8,11,22]]  %Sub RHS
+(\a b -> a == 2 || (2 >= a && b)) 1 (foldr (\a b -> a == 2 || (2 >= a && b)) False [4,8,11,22])
+    foldr (\a b -> a == 2 || (2 >= a && b)) False [4,8,11,22] ?
+    foldr (\a b -> a == 2 || (2 >= a && b)) False [4,8,11,22] =: foldr f b []
+        ... match fails
+    foldr (\a b -> a == 2 || (2 >= a && b)) False [4,8,11,22] =: foldr f b (x:xs)
+        ... match [f := (\a b -> a == 2 || (2 >= a && b)), b := False, x := 4, xs := [8,11,22]]
+    f b (foldr f b xs) [f := (\a b -> a == 2 || (2 >= a && b)), b := False, x := 4, xs := [8,11,22]]  %Sub RHS
+    (\a b -> a == 2 || (2 >= a && b)) 4 (foldr (\a b -> a == 2 || (2 >= a && b)) False [8,11,22])
+        foldr (\a b -> a == 2 || (2 >= a && b)) False [8,11,22] ?
+        foldr (\a b -> a == 2 || (2 >= a && b)) False [8,11,22] =: foldr f b []
+            ... match fails
+        foldr (\a b -> a == 2 || (2 >= a && b)) False [8,11,22] =: foldr f b (x:xs)
+            ... match [f := (\a b -> a == 2 || (2 >= a && b)), b := False, x := 8, xs := [11,22]]
+        f b (foldr f b xs) [f := (\a b -> a == 2 || (2 >= a && b)), b := False, x := 8, xs := [11,22]]  %Sub RHS
+        (\a b -> a == 2 || (2 >= a && b)) 8 (foldr (\a b -> a == 2 || (2 >= a && b)) False [11,22])
+            foldr (\a b -> a == 2 || (2 >= a && b)) False [11,22] ?
+            foldr (\a b -> a == 2 || (2 >= a && b)) False [11,22] =: foldr f b []
+                ... match fails
+            foldr (\a b -> a == 2 || (2 >= a && b)) False [11,22] =: foldr f b (x:xs)
+                ... match [f := (\a b -> a == 2 || (2 >= a && b)), b := False, x := 11, xs := [22]]
+            f b (foldr f b xs) [f := (\a b -> a == 2 || (2 >= a && b)), b := False, x := 11, xs := [22]]  %Sub RHS
+            (\a b -> a == 2 || (2 >= a && b)) 11 (foldr (\a b -> a == 2 || (2 >= a && b)) False [22])
+                foldr (\a b -> a == 2 || (2 >= a && b)) False [22] ?
+                foldr (\a b -> a == 2 || (2 >= a && b)) False [22] =: foldr f b []
+                    ... match fails
+                foldr (\a b -> a == 2 || (2 >= a && b)) False [22] =: foldr f b (x:xs)
+                    ... match [f := (\a b -> a == 2 || (2 >= a && b)), b := False, x := 22, xs := []]
+                f b (foldr f b xs) [f := (\a b -> a == 2 || (2 >= a && b)), b := False, x := 22, xs := []]  %Sub RHS
+                (\a b -> a == 2 || (2 >= a && b)) 22 (foldr (\a b -> a == 2 || (2 >= a && b)) False [])
+                    foldr (\a b -> a == 2 || (2 >= a && b)) False [] ?
+                    foldr (\a b -> a == 2 || (2 >= a && b)) False [] =: foldr f b []
+                        ... match foldr f b [] [f := (\a b -> a == 2 || (2 >= a && b)), b = False]
+                    False
+                (\a b -> a == 2 || (2 >= a && b)) 22 False ?
+                22 == 2 || (2 >= 22 && False)
+                False || (False && False)
+                    (False && False) ?
+                    (False && False) =: (&&) True b
+                        ... match fails
+                    (False && False) =: (&&) _ _
+                        ... match []
+                    False
+                False || False =: (||) False b
+                    ... match [b := False]
+                False
+            (\a b -> a == 2 || (2 >= a && b)) 11 False ?
+            11 == 2 || (2 >= 11 && False)
+            False || (False && False)
+                (False && False) ?
+                (False && False) =: (&&) True b
+                    ... match fails
+                (False && False) =: (&&) _ _
+                    ... match []
+                False
+            False || False =: (||) False b
+                ... match [b := False]
+            False
+        (\a b -> a == 2 || (2 >= a && b)) 8 False ?
+        8 == 2 || (2 >= 8 && False)
+        False || (False && False)
+            (False && False) ?
+            (False && False) =: (&&) True b
+                ... match fails
+            (False && False) =: (&&) _ _
+                ... match []
+            False
+        False || False =: (||) False b
+            ... match [b := False]
+        False
+    (\a b -> a == 2 || (2 >= a && b)) 4 False ?
+    4 == 2 || (2 >= 4 && False)
+    False || (False && False)
+        (False && False) ?
+        (False && False) =: (&&) True b
+            ... match fails
+        (False && False) =: (&&) _ _
+            ... match []
+        False
+    False || False =: (||) False b
+        ... match [b := False]
+    False
+(\a b -> a == 2 || (2 >= a && b)) 1 False ?
+1 == 2 || (2 >= 1 && False)
+False || (True && False)
+    (True && False) ?
+    (True && False) =: (&&) True b
+        ... match [b := False]
+    False
+False || False =: (||) False b
+    ... match [b := False]
+False

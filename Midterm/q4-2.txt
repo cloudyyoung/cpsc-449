@@ -1,0 +1,6 @@
+
+[(x,y) | x <- as, y <- bs, f x == g y]
+
+concat(map(\x -> {[(x,y) | y <- bs, f x == g y]})as)
+concat(map(\x -> concat(map(\y -> {[(x,y) | f x == g y]})bs))as)
+concat(map(\x -> concat(map(\y -> if f x == g y then [(x,y)] else [])bs))as)

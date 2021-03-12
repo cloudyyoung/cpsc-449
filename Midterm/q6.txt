@@ -1,0 +1,6 @@
+group :: (Num a, Ord a) => (a->a->Bool)->[a]->[[a]]
+group nbr xs = foldr f [] xs
+  where f x []          = [[x]]
+        f x ((y:z):ys)
+          | nbr x y     = (x:(y:z)):ys
+          | otherwise   = [x]:(y:z):ys

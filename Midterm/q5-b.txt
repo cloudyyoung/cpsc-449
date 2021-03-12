@@ -1,0 +1,7 @@
+paths :: STree Int -> [[Int]]
+paths (Tp) = []
+paths (Sn Tp a Tp) = [[a]]
+paths (Sn s1 a s2) = foldST g [[]] (Sn s1 a s2)
+    where 
+        g [[]] a [[]] = [[a]]
+        g b a c = map (a:) (b ++ c)
