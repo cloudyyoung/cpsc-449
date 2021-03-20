@@ -39,18 +39,22 @@ simple_moves g = case (status g) of
                             (x,y) <- xs, (x',y') <- [(x + 1,y + (dir g)), (x - 1,y + (dir g))],
                             notoccupied (x',y') g,
                             onboard (x',y'),
-                            not_repeat [P (x,y), coord' (x',y')]]
+                            notrepeat [P (x,y), coord' (x',y')] (history g) 0]
         simple_king  xs = [[K (x,y), K (x',y')] |
                             (x,y) <- xs, (x',y') <- [(x + 1,y + 1), (x + 1,y - 1), (x - 1,y + 1), (x - 1,y - 1)],
                             notoccupied (x',y') g,
                             onboard (x',y'),
-                            not_repeat [K (x,y), K (x',y')]]
+                            notrepeat [K (x,y), K (x',y')] (history g) 0]
         coord' (x,y)    = if is_king (x,y) (status g)
                             then K (x,y)
                             else P (x,y)
-        not_repeat [a,b] = if length (history g) > 2 
-                            then (history g) !! 1 /= [b,a] 
-                            else True
+        notrepeat _ [] _ = True
+        notrepeat [a,b] ([y,z]:xs) t
+                        | a == b && t >= 2 = False
+                        | a == z && b == y && length xs <= 1 = False
+                        | a /= z    = notrepeat [a,b] xs t
+                        | otherwise = notrepeat [y,b] xs (t + 1)
+        notrepeat _ _ _ = True
 
 
 
