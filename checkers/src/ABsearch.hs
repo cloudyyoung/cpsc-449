@@ -21,11 +21,12 @@ bot = -30000
 
 abmaxprune :: GameState -> (Int, Int) -> Int -> Int
 abmaxprune g (a, b) d
-    | a == b                            = a
-    | (moves g) == ([],[]) || d == 0    = if (status g) == Turn Red
-                                            then min (max (red_heuristic g) a) b
-                                            else min (max (black_heuristic g) a) b
-    | otherwise                         = abmaxprune' (children g') (a, b) d
+    | (status g) == GameOver    = 0
+    | a == b                    = a
+    | d == 0                    = if (status g) == Turn Red
+                                    then min (max (red_heuristic g) a) b
+                                    else min (max (black_heuristic g) a) b
+    | otherwise                 = abmaxprune' (children g') (a, b) d
     where
         g' = g {status = if (status g) == Turn Red then Turn Black else Turn Red}
         abmaxprune' [] (a, b) d = a
@@ -36,11 +37,12 @@ abmaxprune g (a, b) d
 
 abminprune :: GameState -> (Int, Int) -> Int -> Int
 abminprune g (a, b) d
+    | (status g) == GameOver    = 0
     | a == b                    = b
-    | (moves g) == ([],[]) || d == 0    = if (status g) == Turn Red
-                                            then min (max (red_heuristic g) a) b
-                                            else min (max (black_heuristic g) a) b
-    | otherwise                         = abminprune' (children g') (a, b) d
+    | d == 0                    = if (status g) == Turn Red
+                                    then min (max (red_heuristic g) a) b
+                                    else min (max (black_heuristic g) a) b
+    | otherwise                 = abminprune' (children g') (a, b) d
     where
         g' = g {status = if (status g) == Turn Red then Turn Black else Turn Red}
         abminprune' [] (a, b) d = b
@@ -51,12 +53,12 @@ abminprune g (a, b) d
 
 minimax :: GameState -> Int -> Status -> Int
 minimax g d s
-    | d == 0 || (moves g) == ([],[])    = if s == Turn Red
-                                            then red_heuristic g
-                                            else black_heuristic g
-    | otherwise                         = if (status g) == s
-                                            then maximum(map (\g -> minimax g (d - 1) s) (children g))
-                                            else minimum(map (\g -> minimax g (d - 1) s) (children g))
+    | d == 0    = if s == Turn Red
+                    then red_heuristic g
+                    else black_heuristic g
+    | otherwise = if (status g) == s
+                    then maximum(map (\g -> minimax g (d - 1) s) (children g))
+                    else minimum(map (\g -> minimax g (d - 1) s) (children g))
 
 
 move_score :: GameState -> [Move] -> Int -> Status -> [(Move, Int)]
