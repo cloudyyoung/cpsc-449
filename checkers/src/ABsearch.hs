@@ -7,10 +7,10 @@ import Checkers.Types
 
 
 black_ai :: GameState -> Move
-black_ai g = undefined
+black_ai g = best_move (move_score g (get_moves g) 4 (Turn Black)) [] bot
 
 red_ai :: GameState -> Move
-red_ai g = undefined
+red_ai g = best_move (move_score g (get_moves g) 4 (Turn Red)) [] bot
 
 top :: Int
 top = 30000
@@ -60,8 +60,8 @@ minimax g d s
 
 
 move_score :: GameState -> [Move] -> Int -> Status -> [(Move, Int)]
-move_score g [] d p = []
-move_score g (m:ms) d p = (m, minimax (apply_move m g) (d - 1) p) : move_score g ms d p
+move_score g [] d s = []
+move_score g (m:ms) d s = (m, minimax (apply_move m g) (d - 1) s) : move_score g ms d s
 
 
 best_move :: [(Move, Int)] -> Move -> Int -> Move
@@ -72,8 +72,10 @@ best_move ((m,s):xs) move max
 
 
 children :: GameState -> [GameState]
-children g = foldr (\move xs -> (apply_move move g):xs) [] m
-    where
-        m = if (snd (moves g)) == []
+children g = foldr (\move xs -> (apply_move move g):xs) [] (get_moves g)
+
+
+get_moves :: GameState -> [Move]
+get_moves g = if (snd (moves g)) == []
                 then fst (moves g)
                 else snd (moves g)
