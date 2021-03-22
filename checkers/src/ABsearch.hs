@@ -23,8 +23,8 @@ children :: GameState -> [GameState]
 children g = foldr (\move xs -> (apply_move move g):xs) [] m
     where
         m = if (snd (moves g)) == []
-                    then fst (moves g)
-                    else snd (moves g)
+                then fst (moves g)
+                else snd (moves g)
 
 
 abmaxprune :: GameState -> (Int, Int) -> Int -> Int
