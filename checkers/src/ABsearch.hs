@@ -21,7 +21,7 @@ bot = -30000
 
 abmaxprune :: GameState -> (Int, Int) -> Int -> Int
 abmaxprune g (a, b) d
-    | (status g) == GameOver    = 0
+    | (status g) == GameOver    = top
     | a == b                    = a
     | d == 0                    = if (status g) == Turn Red
                                     then min (max (red_heuristic g) a) b
@@ -37,7 +37,7 @@ abmaxprune g (a, b) d
 
 abminprune :: GameState -> (Int, Int) -> Int -> Int
 abminprune g (a, b) d
-    | (status g) == GameOver    = 0
+    | (status g) == GameOver    = top
     | a == b                    = b
     | d == 0                    = if (status g) == Turn Red
                                     then min (max (red_heuristic g) a) b
