@@ -6,7 +6,6 @@ import Heuristic
 import Checkers.Types
 
 
-
 black_ai :: GameState -> Move
 black_ai g = undefined
 
@@ -19,13 +18,6 @@ top = 30000
 bot :: Int
 bot = -30000
 
-children :: GameState -> [GameState]
-children g = foldr (\move xs -> (apply_move move g):xs) [] m
-    where
-        m = if (snd (moves g)) == []
-                then fst (moves g)
-                else snd (moves g)
-
 
 abmaxprune :: GameState -> (Int, Int) -> Int -> Int
 abmaxprune g (a, b) d
@@ -33,8 +25,9 @@ abmaxprune g (a, b) d
     | (moves g) == ([],[]) || d == 0    = if (status g) == Turn Red
                                             then min (max (red_heuristic g) a) b
                                             else min (max (black_heuristic g) a) b
-    | otherwise                         = abmaxprune' (children g) (a, b) d
+    | otherwise                         = abmaxprune' (children g') (a, b) d
     where
+        g' = g {status = if (status g) == Turn Red then Turn Black else Turn Red}
         abmaxprune' [] (a, b) d = a
         abmaxprune' (g:gs) (a, b) d = abmaxprune' gs (a', b) d
             where
@@ -47,8 +40,9 @@ abminprune g (a, b) d
     | (moves g) == ([],[]) || d == 0    = if (status g) == Turn Red
                                             then min (max (red_heuristic g) a) b
                                             else min (max (black_heuristic g) a) b
-    | otherwise                         = abminprune' (children g) (a, b) d
+    | otherwise                         = abminprune' (children g') (a, b) d
     where
+        g' = g {status = if (status g) == Turn Red then Turn Black else Turn Red}
         abminprune' [] (a, b) d = b
         abminprune' (g:gs) (a, b) d = abminprune' gs (a, b') d
             where
@@ -64,3 +58,22 @@ minimax g d s
                                             then maximum(map (\g -> minimax g (d - 1) s) (children g))
                                             else minimum(map (\g -> minimax g (d - 1) s) (children g))
 
+
+move_score :: GameState -> [Move] -> Int -> Status -> [(Move, Int)]
+move_score g [] d p = []
+move_score g (m:ms) d p = (m, minimax (apply_move m g) (d - 1) p) : move_score g ms d p
+
+
+best_move :: [(Move, Int)] -> Move -> Int -> Move
+best_move [] move max = move
+best_move ((m,s):xs) move max
+    | s > max   = best_move xs m s
+    | otherwise = best_move xs move max
+
+
+children :: GameState -> [GameState]
+children g = foldr (\move xs -> (apply_move move g):xs) [] m
+    where
+        m = if (snd (moves g)) == []
+                then fst (moves g)
+                else snd (moves g)
