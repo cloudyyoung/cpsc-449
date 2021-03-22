@@ -20,9 +20,9 @@ bot :: Int
 bot = -30000
 
 children :: GameState -> [GameState]
-children g = foldr (\move xs -> (apply_move move g):xs) [] moves'
+children g = foldr (\move xs -> (apply_move move g):xs) [] m
     where
-        moves' = if (snd (moves g)) == []
+        m = if (snd (moves g)) == []
                     then fst (moves g)
                     else snd (moves g)
 
