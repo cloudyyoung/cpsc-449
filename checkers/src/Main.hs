@@ -2,6 +2,8 @@ module Main where
 
 import Moves
 import ApplyMove
+import Heuristic
+import ABsearch
 import Checkers.Types
 import Checkers.FrontEnd.Types
 --import qualified Checkers.FrontEnd.Basic as B
