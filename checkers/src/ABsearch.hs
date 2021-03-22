@@ -40,13 +40,13 @@ abminprune g (a, b) d
     | (moves g) == ([],[]) || d == 0   = if (status g) == Turn Red
                                     then min (max (red_heuristic g) a) b
                                     else min (max (black_heuristic g) a) b
-    | otherwise                 = abminprune' (children g) (a, b) d 
+    | otherwise                 = abminprune' (children g) (a, b) d
     where
         children g = foldr (\move xs -> (apply_move move g):xs) [] (moves g)
         abminprune' [] (a, b) d = b
         abminprune' (g:gs) (a, b) d = abminprune' gs (a, b') d
             where
-                b' = abmaxprune g (a, b) (d - 1)    
+                b' = abmaxprune g (a, b) (d - 1)
 
 
 minimax :: GameState -> Int -> Status -> Int
