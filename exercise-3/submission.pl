@@ -39,13 +39,16 @@ myremove(X, [Y|Ys], [Y|Zs]) :- myremove(X, Ys, Zs).
 %%%%%%% Q2 %%%%%%%
 
 % X occurs precisely two times in L
-% mymember2(X, L).
-
+mymember2(X, L) :- mymember2_(X, L, 0), !.
+mymember2_(X, [X|Ls], T1) :- T2 is T1 + 1, mymember2_(X, Ls, T2), !.
+mymember2_(X, [_|Ls], T) :- mymember2_(X, Ls, T), !.
+mymember2_(_, [], 2).
 
 %%%%%%% Q3 %%%%%%%
 
 % X is a contiguous sublist of Y
-% substring(X, Y).
+substring([], _) :- !.
+substring(X,Y) :- myappend(X,_,T), myappend(_,T,Y), !.
 
 %%%%%%% Q4 %%%%%%%
 
