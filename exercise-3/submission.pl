@@ -40,9 +40,9 @@ myremove(X, [Y|Ys], [Y|Zs]) :- myremove(X, Ys, Zs).
 
 % X occurs precisely two times in L
 mymember2(X, L) :- mymember2_(X, L, 0), !.
+mymember2_(_, [], 2).
 mymember2_(X, [X|Ls], T1) :- T2 is T1 + 1, mymember2_(X, Ls, T2), !.
 mymember2_(X, [_|Ls], T) :- mymember2_(X, Ls, T), !.
-mymember2_(_, [], 2).
 
 %%%%%%% Q3 %%%%%%%
 
@@ -53,12 +53,18 @@ substring(X,Y) :- myappend(X,_,T), myappend(_,T,Y), !.
 %%%%%%% Q4 %%%%%%%
 
 % O contains all the sublists of L
-% sublists(L, O).
+% This function is reversable.
+sublists([],[]).
+sublists([H|T], [H|R]) :- sublists(T, R).
+sublists([_|T], R) :- sublists(T,R).
+
 
 %%%%%%% Q5 %%%%%%%
 
 % X and Y are permutations of each other.
 % mypermutation(X, Y).
+mypermutation([], []).
+mypermutation([T|H], X) :- mypermutation(H, H1), myappend(L1, L2, H1), myappend(L1, [T], X1), myappend(X1, L2, X).
 
 
 %%%%%%% Q6 %%%%%%%
