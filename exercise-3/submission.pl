@@ -19,7 +19,13 @@ myreverse([X|Xs], Y) :-
 
 
 % Y is the flattening of X
-% myflatten(X, Y).
+islist([]).
+islist([_|Xs]) :- islist(Xs).
+
+myflatten([], []).
+myflatten([X|Xs], Ys) :- islist(X), myflatten(Xs, Zs), myappend(X, Zs, Ys), !.
+myflatten([X|Xs], [X|Ys]) :- myflatten(Xs, Ys).
+
 
 % X is a member of Y
 mymember(X,[X|_]).
