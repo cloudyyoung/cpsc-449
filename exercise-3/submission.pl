@@ -74,28 +74,60 @@ mypermutation([T|H], X) :- mypermutation(H, H1), myappend(L1, L2, H1), myappend(
 % daughter(Mother, Father, Daughter)
 % son(Mother, Father, Son)
 %
-
+daughter("Doreen","Leonard","Nina").
+daughter("Doreen","Leonard","Rene").
+daughter("Melba","Leonard","Doreen").
+daughter("Cecilia","Timothy","Ruth").
+son("Kathleen","Marvin","Hogan").
+son("Doreen","Leonard","Pam").
+son("Melba","Leonard","Charles").
+son("Cecilia","Timothy","Marvin").
+son("Cecilia","Timothy","Leonard").
 
 % is Grandfather a grandfather of Child
 % grandfather(Grandfather, Grandchild).
+grandfather(X, Y) :-
+    (son(_, X, P); daughter(_, X, P)),
+    (son(P, _, Y); daughter(P, _, Y); son(_, P, Y); daughter(_, P, Y)).
 
 % is Grandmother a grandmother of Child
 % grandmother(Grandmother, Grandchild).
-
+grandmother(X, Y) :-
+    (son(X, _, P);daughter(X, _, P)),
+    (son(P, _, Y);daughter(P, _, Y);son(_, P, Y);daughter(_, P, Y)).
 
 % is Brother a brother of Child
-% brother(Brother, Child).
+brother(X, Y) :-
+    (son(_, M, X), (son(_, M, Y); daughter(_, M, Y)); son(F, _, X), (son(F, _, Y); daughter(F, _, Y))),
+    X \= Y.
 
 % is Sister a sister of Child
-% sister(Sister, Child).
+sister(X, Y) :-
+    (daughter(_, M, X), (son(_, M, Y); daughter(_, M, Y)); daughter(F, _, X), (son(F, _, Y); daughter(F, _, Y))),
+    X \= Y.
 
 % Sibling a sibling of child
-% sibling(Sibling, Child).
+sibling(X, Y) :-
+    (son(D, M, X); daughter(D, M, X)),
+    (son(D, M, Y); daughter(D, M, Y)),
+    X \= Y.
 
 % Is A a cousin of B?
 % I.e. (Is A a child of a sibling of B).
-% cousin(A, B).
+cousin(X, Y) :-
+    grandfather(F, X), 
+    grandfather(F, Y),
+    grandmother(M, X), 
+    grandmother(M, Y),
+    father(F1, X),
+    father(F2, Y),
+    mother(M1, X),
+    mother(M2, Y),
+    F1 \= F2,
+    M1 \= M2.
 
+father(X, Y) :- son(_, X, Y); daughter(_, X, Y).
+mother(X, Y) :- son(X, _, Y); daughter(X, _, Y).
 
 
 %%%%%%% Q7 %%%%%%%
