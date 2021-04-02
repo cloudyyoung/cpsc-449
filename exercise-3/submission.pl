@@ -13,7 +13,6 @@ myappend([X|Xs], Ys, [X|Zs]) :- myappend(Xs, Ys, Zs).
 
 % Y is the reverse of X
 myreverse([], []).
-myreverse([X], [X]).
 myreverse([X|Xs], Y) :- 
     myreverse(Xs, T), 
     myappend(T, [X], Y).
@@ -23,10 +22,13 @@ myreverse([X|Xs], Y) :-
 % myflatten(X, Y).
 
 % X is a member of Y
-% mymember(X, Y).
+mymember(X,[X|_]).
+mymember(X,[_|Ys]) :- mymember(X,Ys).
 
 % Z is list obtained from remove X from Y
-% myremove(X, Y, Z).
+myremove(_, [], []).
+myremove(X, [X|Ys], Zs) :- myremove(X, Ys, Zs), !.
+myremove(X, [Y|Ys], [Y|Zs]) :- myremove(X, Ys, Zs).
 
 %%%%%%% Q2 %%%%%%%
 
