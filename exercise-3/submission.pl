@@ -238,7 +238,7 @@ hint7(H) :- nationality(X, englishman), color(X, red), anywhere(X, H).
 hint8(H) :- nationality(spaniard), pet(X, dog), anywhere(X, H).
 
 % Beer is brewed (and drunk in large quantities) in the green house
-hint9(H) :- drink(H, beer), color(X, green), anywhere(X, H).
+hint9(H) :- drink(X, beer), color(X, green), anywhere(X, H).
 
 % The Scotsman drinks whiskey and is often tipsey
 hint10(H) :- nationality(X, scotsman), drink(X, whiskey), anywhere(X, H).
@@ -247,7 +247,7 @@ hint10(H) :- nationality(X, scotsman), drink(X, whiskey), anywhere(X, H).
 hint11(H) :- color(X, green), color(Y, white), rightof(X, Y, H).
 
 % The tennis player owns snakes
-hint12(H) :- sport(X, tennis), pet(X, snack), anywhere(X, H).
+hint12(H) :- sport(X, tennis), pet(X, snake), anywhere(X, H).
 
 % Soccer is played in the yellow house
 hint13(H) :- sport(X, soccer), color(X, yellow), anywhere(X, H).
@@ -272,7 +272,7 @@ hints(H) :-
     hint14(H).
 
 hamster_owner(O) :- hints(houses), pet(X, hamster), nationality(X, O).
-orange_juice_drinker(O) :- hints(house), drink(X, orange_juice), nationality(X, O).
+orange_juice_drinker(O) :- hints(houses), drink(X, orange_juice), nationality(X, O).
 
 %%%%%%% Q9 %%%%%%%
 
