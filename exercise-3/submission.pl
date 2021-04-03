@@ -39,10 +39,11 @@ myremove(X, [Y|Ys], [Y|Zs]) :- myremove(X, Ys, Zs).
 %%%%%%% Q2 %%%%%%%
 
 % X occurs precisely two times in L
-mymember2(X, L) :- mymember2_(X, L, 0), !.
-mymember2_(_, [], 2).
-mymember2_(X, [X|Ls], T1) :- T2 is T1 + 1, mymember2_(X, Ls, T2), !.
-mymember2_(X, [_|Ls], T) :- mymember2_(X, Ls, T), !.
+mymember2(X, L) :- count(X, L, Z), Z is 2.
+count(_, [], 0).
+count(X, [X|Ls], Y) :- count(X, Ls, Z), Y is Z + 1, !.
+count(X, [_|Ls], Y) :- count(X, Ls, Y).
+
 
 %%%%%%% Q3 %%%%%%%
 
@@ -56,7 +57,7 @@ substring(X,Y) :- myappend(X,_,T), myappend(_,T,Y), !.
 % This function is reversable.
 sublists([],[]).
 sublists([H|T], [H|R]) :- sublists(T, R).
-sublists([_|T], R) :- sublists(T,R).
+sublists([_|T], R) :- sublists(T, R).
 
 
 %%%%%%% Q5 %%%%%%%
