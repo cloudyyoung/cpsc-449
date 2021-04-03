@@ -51,6 +51,7 @@ count(X, [_|Ls], Y) :- count(X, Ls, Y).
 substring([], _) :- !.
 substring(X,Y) :- myappend(X,_,T), myappend(_,T,Y), X \= [].
 
+
 %%%%%%% Q4 %%%%%%%
 
 % O contains all the sublists of L
@@ -66,7 +67,6 @@ addlists(X, [H|T], [[X|H]|S]) :- addlists(X,T,S).
 
 
 %%%%%%% Q5 %%%%%%%
-
 % X and Y are permutations of each other.
 % mypermutation(X, Y).
 mypermutation([], []).
@@ -141,9 +141,15 @@ mother(X, Y) :- son(X, _, Y); daughter(X, _, Y).
 % Note, an edge is defined as 
 %   edge(X, Y).
 % which is a unidirectional edge from X to Y
+edge(a,b).
+edge(a,c).
+edge(a,d).
+edge(e,a).
+edge(c,a).
 
 % Does there exists a path between X and Y
-% path(X, Y).
+path(X, X).
+path(X, Y) :- edge(X,Y); edge(X, Z), edge(Z, Y).
 
 % What is the length L of the shortest path from X to Y
 % shortpath(X, Y, L).
