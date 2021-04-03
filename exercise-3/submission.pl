@@ -49,15 +49,20 @@ count(X, [_|Ls], Y) :- count(X, Ls, Y).
 
 % X is a contiguous sublist of Y
 substring([], _) :- !.
-substring(X,Y) :- myappend(X,_,T), myappend(_,T,Y), !.
+substring(X,Y) :- myappend(X,_,T), myappend(_,T,Y), X \= [].
 
 %%%%%%% Q4 %%%%%%%
 
 % O contains all the sublists of L
 % This function is reversable.
-sublists([],[]).
-sublists([H|T], [H|R]) :- sublists(T, R).
-sublists([_|T], R) :- sublists(T, R).
+sublists([], [[]]).
+sublists([H|T], L) :-
+    sublists(T, L2),
+    addlists(H, L2, L3),
+    myappend(L2, L3, L), !.
+
+addlists(_, [], []).
+addlists(X, [H|T], [[X|H]|S]) :- addlists(X,T,S).
 
 
 %%%%%%% Q5 %%%%%%%
