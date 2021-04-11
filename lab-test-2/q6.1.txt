@@ -1,0 +1,24 @@
+
+leaves Tip = 1
+leaves(Node a t1 t2 t3) = leaves t1 + leaves t2 + leaves t3
+
+nodes Tip = 0
+nodes(Node a t1 t2 t3) = 1 + nodes t1 + nodes t2 + nodes t3
+
+
+Prove by structural induction for a ternary branching tree that the number of leaves of a ternary branching tree is one more than double the number of nodes.
+Namely prove: leaves t = 1 + 2 * nodes t
+
+
+Proof: By structural induction:
+
+    leaves Tip              = 1
+                            = 1 + 2 * 0
+                            = 1 + 2 * nodes Tip
+
+    leaves(Node a t1 t2 t3) = leaves t1 + leaves t2 + leaves t3
+                            = 1 + 2 * nodes t1 + 1 + 2 * nodes t2 + 1 + 2 * nodes t3
+                            = 1 + 2 * (1 + nodes t1 + nodes t2 + nodes t3)
+                            = 1 + 2 * nodes(Node a t1 t2 t3)
+
+[]

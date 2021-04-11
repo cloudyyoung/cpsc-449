@@ -1,0 +1,31 @@
+
+
+frev(X,Y) :- shunt(X,[],Y).             % (1) :- (1.1)
+
+shunt([],X,X).                          % (2)
+shunt([H|T],S,Z) :- shunt(T,[H|S],Z).   % (3) :- (3.1)
+
+goal: frev([a,b,c],R).
+
+unify with (1) frev(X1, Y1)                                                                 success ( [a,b,c]/X1, R/Y1 )
+    body (1.1) shunt(X1, [], Y1)
+            = shunt([a,b,c], [], R)
+            unify with (2) shunt([], X, X)                                                  fail ([] does not unify with [a,b,c])
+            unify with (3) shunt([H1|T1], S1, Z1)                                           success ( a/H1, [b,c]/T1, []/S1, R/Z1 )
+                body (3.1) shunt(T1, [H1|S1], Z1)
+                        = shunt([b,c], [a], R)
+                        unify with (2) shunt([], X, X)                                      fail ([] does not unify with [b,c])
+                        unify with (3) shunt([H2|T2], S2, Z2)                               success ( b/H2, [c/T2, [a]/S2, Z1/Z2 )
+                            body (3.1) shunt(T2, [H2|S2], Z2)
+                                    = shunt([c], [b,a], Z2)
+                                    unify with (2) shunt([], X, X)                          fail ([] does not unify with [c])
+                                    unify with (3) shunt([H3|T3], S3, Z3)                   success ( c/H3, []/T3, [b,a]/S3, Z2/Z3 )
+                                        body (3.1) shunt(T3, [H3|S3], Z3)
+                                                = shunt([], [c,b,a], Z3)
+                                                unify with (2) shunt([], X4, X4)            success ( [c,b,a]/X4, Z3/X4 )
+                                                    body empty: answer ** X4 = [c,b,a] **;  (force backtracking)
+                                                unify with (3) shunt([H4|T4], S4, Z4)       fail ( [] does not unify with [H4|T4] )
+                                                
+                                                ... eventually terminates ...
+
+                                                R = [c,b,a]
