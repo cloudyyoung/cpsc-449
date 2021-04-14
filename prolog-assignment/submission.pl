@@ -1,8 +1,8 @@
 
 % REQUIRED CODE FOR AUTOGRADER
 % DO NOT CHANGE
-% :- module(submission, []).
-% :- use_module(library(lists), [member/2, append/3]).
+:- module(submission, []).
+:- use_module(library(lists), [member/2, append/3]).
 % Begin Assignment Code
 
 blue.
