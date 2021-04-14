@@ -1,8 +1,8 @@
 
 % REQUIRED CODE FOR AUTOGRADER
 % DO NOT CHANGE
-% :- module(submission, []).
-% :- use_module(library(lists), [member/2, append/3]).
+:- module(submission, []).
+:- use_module(library(lists), [member/2, append/3]).
 % Begin Assignment Code
 
 blue.
@@ -109,3 +109,14 @@ queries(houses, Houses,
 hamster_owner(X) :- solver(houses, [X, _]).
 orange_juice_drinker(Y) :- solver(houses, [_, Y]).
 
+
+
+josephus(Soldiers, N, J, A) :- makelist(Soldiers, 0, List) , loop(List, N, N, J, A).
+
+makelist(Soldiers, N, []) :- Soldiers = N.
+makelist(Soldiers, N, List) :- Soldiers > N, N2 is N + 1, append([N2], List2, List), makelist(Soldiers, N2, List2).
+
+loop([F,S|T], 0, N, J, A) :- T == [] -> J is F, A is S;
+                                        loop([S|T], N, N, J, A).
+
+loop([H|T], C, N, J, A) :- C > 0, C2 is C - 1, append(T, [H], L), loop(L, C2, N, J, A).
