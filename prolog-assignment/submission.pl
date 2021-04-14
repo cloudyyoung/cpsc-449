@@ -121,29 +121,44 @@ loop([F,S|T], 0, N, J, A) :- T == [] -> J is F, A is S;
 
 loop([H|T], C, N, J, A) :- C > 0, C2 is C - 1, append(T, [H], L), loop(L, C2, N, J, A).
 
+/**
+    Declarative Sentence
+**/
 
-% -*- Mode:Prolog -*-
-%  working_directory(_,'/Users/robin/ucalgary/class/449/prolog/').
+% Simple Sentence
+sentence --> simple_sentence.
 
-/*  
+% Direct Object: subject-verb-object
+simple_sentence --> simple_subject, pronoun(object).
+simple_sentence --> simple_subject, noun_phrase(object).
 
-The purpose of these notes is to give a very brief introduction to 
-definite clause grammars as supported in most prolog systems.
-These have been used quite successfully to develop natural langage 
-processing applications.
+simple_subject --> pronoun(subject, first), verb(first).      % I like
+simple_subject --> pronoun(subject, second), verb(first).     % You like / They like
+simple_subject --> pronoun(subject, third), verb(third).      % He likes
+simple_subject --> proper_noun(subject), verb(third).         % Mary likes
+simple_subject --> pronoun(subject, _), verb(past).           % I liked
 
-A typical application is to parse English language sentences.  Here 
-is a very simple example to give the idea:
 
-*/
+/**
+    Compound Sentence
+    I like cats and dogs.
+    You like cats or dogs.
+    Mary likes him and John likes them.
+**/
+sentence --> compound_sentence.
 
-sentence --> pronoun(subject), verb_phrase.
-sentence --> proper_noun(subject),verb_phrase.
+compound_sentence --> simple_subject, compound_object, conjunction, compound_object.
+compound_sentence --> simple_sentence, conjunction, simple_sentence.
 
-verb_phrase --> verb, pronoun(object).
-verb_phrase --> verb, noun_phrase(object).
+compound_object --> proper_noun(object).
+compound_object --> pronoun(object).
+compound_object --> noun_phrase(object).
 
-noun_phrase(object) --> adjective,noun(object).
+
+
+
+
+noun_phrase(object) --> adjective, noun(object).
 noun_phrase(object) --> noun(object).
 
 proper_noun(subject) --> [mary].
@@ -155,11 +170,25 @@ noun(object) --> [dogs].
 adjective --> [black].
 adjective --> [tan].
 
-pronoun(subject) --> [he].
-pronoun(subject) --> [she].
+pronoun(subject, first) --> [i].
+pronoun(subject, second) --> [you].
+pronoun(subject, second) --> [they].
+pronoun(subject, third) --> [he].
+pronoun(subject, third) --> [she].
+pronoun(object) --> [you].
 pronoun(object) --> [him].
 pronoun(object) --> [her].
+pronoun(object) --> [it].
+pronoun(object) --> [them].
 
-verb --> [likes].
-verb --> [hates].
-verb --> [does,not,mind].
+verb(first) --> [like].
+verb(first) --> [hate].
+verb(third) --> [likes].
+verb(third) --> [hates].
+verb(third) --> [does,not,mind].
+verb(past) --> [liked].
+verb(past) --> [hated].
+
+% Coordinating conjunction
+conjunction --> [and].
+conjunction --> [or].
