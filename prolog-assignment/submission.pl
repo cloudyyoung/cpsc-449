@@ -1,8 +1,8 @@
 
 % REQUIRED CODE FOR AUTOGRADER
 % DO NOT CHANGE
-:- module(submission, []).
-:- use_module(library(lists), [member/2, append/3]).
+% :- module(submission, []).
+% :- use_module(library(lists), [member/2, append/3]).
 % Begin Assignment Code
 
 blue.
@@ -120,3 +120,46 @@ loop([F,S|T], 0, N, J, A) :- T == [] -> J is F, A is S;
                                         loop([S|T], N, N, J, A).
 
 loop([H|T], C, N, J, A) :- C > 0, C2 is C - 1, append(T, [H], L), loop(L, C2, N, J, A).
+
+
+% -*- Mode:Prolog -*-
+%  working_directory(_,'/Users/robin/ucalgary/class/449/prolog/').
+
+/*  
+
+The purpose of these notes is to give a very brief introduction to 
+definite clause grammars as supported in most prolog systems.
+These have been used quite successfully to develop natural langage 
+processing applications.
+
+A typical application is to parse English language sentences.  Here 
+is a very simple example to give the idea:
+
+*/
+
+sentence --> pronoun(subject), verb_phrase.
+sentence --> proper_noun(subject),verb_phrase.
+
+verb_phrase --> verb, pronoun(object).
+verb_phrase --> verb, noun_phrase(object).
+
+noun_phrase(object) --> adjective,noun(object).
+noun_phrase(object) --> noun(object).
+
+proper_noun(subject) --> [mary].
+proper_noun(subject) --> [john].
+
+noun(object) --> [cats].
+noun(object) --> [dogs].
+
+adjective --> [black].
+adjective --> [tan].
+
+pronoun(subject) --> [he].
+pronoun(subject) --> [she].
+pronoun(object) --> [him].
+pronoun(object) --> [her].
+
+verb --> [likes].
+verb --> [hates].
+verb --> [does,not,mind].
