@@ -1,8 +1,8 @@
 
 % REQUIRED CODE FOR AUTOGRADER
 % DO NOT CHANGE
-:- module(submission, []).
-:- use_module(library(lists), [member/2, once/1]).
+% :- module(submission, []).
+% :- use_module(library(lists), [member/2, append/3]).
 % Begin Assignment Code
 
 blue.
@@ -95,13 +95,13 @@ middle(X, [_, _, X, _, _]).
 
 queries(houses, Houses,
     [
-        member(A, Houses),
         nationality(A, X),
         pet(A, hamster),
+        anywhere(A, Houses),
 
-        member(B, Houses),
         nationality(B, Y),
-        drink(B, orangejuice)
+        drink(B, orangejuice),
+        anywhere(B, Houses)
     ],
     [X, Y]
 ).
