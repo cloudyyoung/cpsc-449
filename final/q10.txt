@@ -1,0 +1,50 @@
+
+data Tree a = Tip a
+            | Node (Tree a) (Tree a)
+
+mapTree1 f (Tip a) = Tip (f a)
+mapTree1 f (Node t1 t2) = Node (mapTree1 f t1) (mapTree1 f t2)
+
+foldTree tip node (tip a) = Tip a
+foldTree tip node (Node t1 t2) = node (foldTree tip node t1) (foldTree tip node t2)
+
+mapTree2 f = foldTree (\a->Tip(f a)) Node 
+
+
+Proof: mapTree1 f t = mapTree2 f t
+
+1)  For base case, we want to show: 
+        mapTree1 f (Tip a) = mapTree2 f (Tip a)
+2)  For inductive steps, we want to show: 
+        mapTree1 f (Node (Tip a) (Tip b)) = mapTree2 f (Node (Tip a) (Tip b))
+    on the hypothesis that:
+        mapTree1 f t = mapTree2 f t
+
+
+
+Base:
+LHS = mapTree1 f (Tip a)                        by (mapTree1 pattern #1)
+    = Tip (f a)
+
+RHS = mapTree2 f (Tip a)                        by (mapTree2 pattern #1)
+    = foldTree (\a->Tip(f a)) Node (Tip a)      by (foldTree pattern #1)
+    = Tip (f a)
+
+LHS = RHS []
+
+
+
+Inductive Steps:
+
+LHS = mapTree1 f (Node (Tip a) (Tip b))                                                     by (mapTree1 pattern #2)
+    = Node (mapTree1 f (Tip a)) (mapTree1 f (Tip a))                                        by (mapTree1 pattern #1)
+    = Node (Tip a) (mapTree1 f (Tip a))                                                     by (mapTree1 pattern #1)
+    = Node (Tip a) (Tip b)
+
+RHS = mapTree2 f (Node (Tip a) (Tip b))                                                     by (mapTree2 pattern #1)
+    = foldTree (\a->Tip(f a)) Node (Node (Tip a) (Tip a))                                   by (foldr pattern #2)
+    = Node (foldTree (\a->Tip(f a)) Node (Tip a)) (foldTree (\a->Tip(f a)) Node (Tip b))    by (foldr pattern #1)
+    = Node (Tip a) (foldTree (\a->Tip(f a)) Node (Tip b))                                   by (foldr pattern #1)
+    = Node (Tip a) (Tip b)
+
+LHS = RHS []

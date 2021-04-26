@@ -1,0 +1,15 @@
+
+strange :: STree Int -> (Bool, SF(Int, Int))
+strange (Sip) = (True, FF)
+strange (Sode a b c)
+    | sorted(treeList)    = (True, SS(min, max))
+    | otherwise           = (False, SS(min, max))
+    where
+        treeList = listSTree (Sode a b c)
+        min = minimum(treeList)
+        max = maximum(treeList)
+
+listSTree (Sip) = []
+listSTree (Sode a b c) = (listSTree a) ++ [b] ++ (listSTree c)
+
+sorted xs = foldr (&&) True (map (\(a,b) -> a <= b) (zip xs (tail xs)))

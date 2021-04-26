@@ -1,0 +1,15 @@
+
+
+trace(infect(StartPerson,StartTime),infect(GoalPerson,GoalTime), [infect(StartPerson,StartTime), infect(GoalPerson,X)]) :- 
+    met(StartPerson, X, GoalPerson), 
+    StartTime >= X,
+    X >= GoalTime,
+    7 >= (StartTime - X).
+
+trace(infect(StartPerson,StartTime),infect(GoalPerson,GoalTime), InfectionPathway) :-
+    StartTimeWithin = StartTime - 7,
+    GoalTimeWithin = GoalTime + 7,
+    trace(infect(StartPerson, StartTime), infect(MiddlePerson, StartTimeWithin), A),
+    trace(infect(MiddlePerson, GoalTimeWithin), infect(GoalPerson, GoalTime), [infect(MiddlePerson, GoalTimeWithin)|B]),
+    append(A, B, InfectionPathway).
+    

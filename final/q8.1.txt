@@ -1,0 +1,9 @@
+
+
+inSTree :: Ord a => a -> (STree a) -> Bool
+inSTree a (Sip) = False
+inSTree a (Sode c b d)
+    | a == b    = True
+    | otherwise = inSTree a c || inSTree a d
+
+

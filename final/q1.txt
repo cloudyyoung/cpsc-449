@@ -1,0 +1,19 @@
+
+append([],X,X).                             % (1)
+append([H|T],X,[H|Y]):- append(T,X,Y).      $ (2.1) :- (2.2)
+
+goal: append(X,Y,[a,b]).
+
+
+unify with (1) append([], X1, X1)                           success ( X/[], Y/X1, [a,b]/X1 )
+    body empty: answer X1 = [a,b]   ** X = [], Y = [a,b] **  (force backtrack)
+unify with (2.1) append([H2|T2], X2, [H2|Y2])               success ( X/[H2|T2], Y/X2, [a,b]/[H2|Y2] )
+    body (2.2) append(T2, X2, Y2)
+        = append(T2, X2, [b])
+        unify with (1) append([], X3, X3)                   success ( T2/[], X2/X3, [b]/X3 )
+            body empty: answer X3 = [b]   ** X = [a], Y = [b] **  (force backtrack)
+        unify with (2.1) append([H4|T4], X4, [H4|Y4])       success ( T2/[H4|T4], X2/X4, [b]/[H4|Y4] )
+            = append(T4, X4, [])
+            unify with (1) append([], X5, [])               success ( T4/[], X4/X5, []/[])
+                body empty: answer X5 = []   ** X = [a,b], Y = [] **  (force backtrack)
+                no more backtracking.

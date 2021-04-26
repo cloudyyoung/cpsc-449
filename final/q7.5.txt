@@ -1,0 +1,5 @@
+
+misery xs = []:[s|t<-suffer xs,s<-prefixes t]
+
+2nd rule: misery xs = []:concat( map(\t -> { [s | s <- prefixes t] }) xs)
+2nd rule: misery xs = []:concat( map(\t -> concat( map(\s -> { prefixes s }) t) ) xs)

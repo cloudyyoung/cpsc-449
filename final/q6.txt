@@ -1,0 +1,95 @@
+
+False || b = b
+_ || _ = True
+        
+foldr f b [] = b
+foldr f b (x:xs) = f x (foldr f b xs)
+        
+map f [] = []
+map f (x:xs) = (f x):(map f xs)
+        
+inlist x ys = foldr (||) False (map (\y->x==y) ys)
+
+
+
+inlist 2 [11,2,7] ?
+= foldr (||) False (map (\y->2==y) [11,2,7])
+    map (\y->2==y) [11,2,7] ?                                       % evaluate map
+    map (\y->x==y) [11,2,7] =: map f []
+        ... match fails
+    map (\y->x==y) [11,2,7] =: map f (x:xs)
+        ... match [f := (\y->2==y), x := 11, xs := [2,7]]
+    = (f x):(map f xs) [f := (\y->2==y), x := 11, xs := [2,7]]
+    = ((\y->2==y) 11):(map (\y->2==y) [2,7])                        % RHS substituted
+    (2==11):(map (\y->2==y) [2,7])
+    False:(map (\y->2==y) [2,7])
+        map (\y->2==y) [2,7] ?                                      % evaluate map
+        map (\y->2==y) [2,7] =: map f []
+            ... match fails
+        map (\y->2==y) [2,7] =: map f (x:xs)
+            ... match [f := (\y->2==y), x := 2, xs := [7]]
+        = (f x):(map f xs) [f := (\y->2==y), x := 2, xs := [7]]     % RHS substituted
+        = ((\y->2==y) 2):(map (\y->2==y) [7])
+        (2==2):(map (\y->2==y) [7])
+        True:(map (\y->2==y) [7])
+            map (\y->2==y) [7] ?                                    % evaluate map
+            map (\y->2==y) [7] =: map f []
+                ... match fails
+            map (\y->2==y) [7] =: map f (x:xs)
+                ... match [f := (\y->2==y), x := 7, xs := []]
+            = (f x):(map f xs) [f := (\y->2==y), x := 7, xs := []]  % RHS substituted
+            = ((\y->2==y) 7):(map (\y->2==y) [])
+            (2==7):(map (\y->2==y) [])
+            False:(map (\y->2==y) [])
+                map (\y->2==y) [] ?                                 % evaluate map
+                map (\y->2==y) [] =: map f []
+                    ... match [f := (\y->2==y), [] := []]
+                = []
+            False:[]
+        True:False:[]
+    False:True:False:[]
+    [False, True, False]
+foldr (||) False [False, True, False]
+foldr (||) False [False, True, False] =: foldr f b []
+    ... match fails
+foldr (||) False [False, True, False] =: foldr f b (x:xs)
+    ... match [f := (||), b := False, x := False, xs := [True, False]]
+= f x (foldr f b xs) [f := (||), b := False, x := False, xs := [True, False]]
+(||) False (foldr (||) False [True, False])                                         % RHS substituted
+    (foldr (||) False [True, False]) ?                                              % evaluate foldr
+    foldr (||) False [True, False] =: foldr f b []
+        ... match fails
+    foldr (||) False [True, False] =: foldr f b (x:xs)
+        ... match [f := (||), b := False, x := True, xs := [False]]
+    = f x (foldr f b xs) [f := (||), b := False, x := True, xs := [False]]
+    (||) True (foldr (||) False [False])                                            % RHS substituted
+        (foldr (||) False [False]) ?                                                % evaluate foldr
+        foldr (||) False [False] =: foldr f b []
+            ... match fails
+        foldr (||) False [False] =: foldr f b (x:xs)
+            ... match [f := (||), b := False, x := False, xs := []]
+        = f x (foldr f b xs) [f := (||), b := False, x := False, xs := []]
+        (||) False (foldr (||) False [])                                            % RHS substituted
+            (foldr (||) False []) ?                                                 % evaluate foldr
+            foldr (||) False [] =: foldr f b []
+                ... match [f := (||), b := False]
+            = b [f := (||), b := False]
+            False                                                                   % RHS substituted
+        (||) False False
+        (||) False False =: False || b
+            ... match [b := False]
+        = b
+        False                                                                       % RHS substituted
+    (||) True False
+    (||) True False =: False || b
+        ... match fails
+    (||) True False =: _ || _ = True
+        ... match []
+    = True
+(||) False True
+(||) False True =: False || b
+    ... match [b := True]
+=b                                                                                  % RHS substituted
+True
+
+
